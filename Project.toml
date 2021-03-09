@@ -3,6 +3,10 @@ uuid = "abcecc63-2b08-419c-80c4-c63dca6fa478"
 authors = ["anand <anandj@uchicago.edu> and contributors"]
 version = "0.1.0"
 
+[deps]
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+
 [compat]
 julia = "1"
 
