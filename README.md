@@ -26,10 +26,8 @@ xml = xml"""
 </math>"""
 
 num = parse_node(xml.root)
-# S1*compartment*k1
-
-typeof(num)
-# Num
+# 1-element Vector{Num}:
+#  S1*compartment*k1
 
 xml = xml"""
 <math xmlns="http://www.w3.org/1998/Math/MathML">
