@@ -52,6 +52,6 @@ num = parse_node(xml.root)
 ```
 
 ## TODO:
-* bound variables like <bvar>
-* <piecewise>
+* bound variables like bvar
+* piecewise
 * nested apply
