@@ -4,7 +4,7 @@ doc = readxml(fn)
 num = MathML.parse_node(doc.root)
 @variables compartment k1 S1
 true_num = prod([compartment, k1, S1])
-@test isequal(num, true_num)
+@test isequal(num, [true_num])
 
 
 fn = "data/eq.xml"
