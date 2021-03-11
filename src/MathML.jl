@@ -1,6 +1,6 @@
 module MathML
 
-using EzXML, Symbolics
+using EzXML, Symbolics, Statistics
 
 include("parse.jl")
 include("utils.jl")

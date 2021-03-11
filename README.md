@@ -47,9 +47,25 @@ num = parse_node(xml.root)
 # 2-element Vector{Equation}:
 #  T ~ Par_94
 #  I ~ Par_90
+
+# you can also just go directly from EzXML.Document or String
+str = "<apply><power/><ci>x</ci><cn>3</cn></apply>"
+MathML.parse_str(str)
+# x^3
+
+xstr = xml"<apply><power/><ci>x</ci><cn>3</cn></apply>"
+MathML.parse_doc(xstr)
+# x^3
+
 ```
+
+Check the tests in `test/parse.jl` to see a more exaustive list of what is covered.
 
 ## TODO:
 * bound variables like bvar
 * piecewise
+* fix /sep tags in cn
+* calculus: diff, maybe int (less important)
+
+## DONE:
 * nested apply

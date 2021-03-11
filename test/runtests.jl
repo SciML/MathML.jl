@@ -1,4 +1,4 @@
-using MathML, EzXML, Symbolics, Test
+using MathML, EzXML, Symbolics, SpecialFunctions, Test
 
 @testset "MathML.jl" begin
     @testset "parsing" begin include("parse.jl") end
