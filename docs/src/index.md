@@ -1,12 +1,12 @@
 ```@meta
-CurrentModule = DemoActions
+CurrentModule = MathML
 ```
 
-# DemoActions
+# MathML
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [DemoActions]
+Modules = [MathML]
 ```
