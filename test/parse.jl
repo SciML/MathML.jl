@@ -6,7 +6,6 @@ num = MathML.parse_node(doc.root)
 true_num = prod([compartment, k1, S1])
 @test isequal(num, [true_num])
 
-
 fn = "data/eq.xml"
 doc = readxml(fn)
 eqs = MathML.parse_node(doc.root)
@@ -21,6 +20,18 @@ true_eqs = [
 
 str = "<apply><compose/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
 @test isequal(MathML.parse_str(str), x ∘ y ∘ z)
+
+str = """<cn type="rational">22<sep/>7</cn>"""
+@test isequal(MathML.parse_str(str), 22//7)
+
+str = """<cn type="e-notation">5<sep/>2</cn>"""
+@test isequal(MathML.parse_str(str), 500)
+
+str = """<cn type="complex-polar"> 2 <sep/> 3.1415 </cn>"""
+@test isapprox(MathML.parse_str(str), Complex(-2, 0), atol=1e-3)
+
+str = """<cn type="complex-cartesian"> 12.3 <sep/> 5 </cn>"""
+@test isequal(MathML.parse_str(str), Complex(12.3, 5))
 
 # heaviside and nesting test
 # str = """
@@ -152,4 +163,3 @@ str = """
 </vector>
 """
 @test isequal(MathML.parse_str(str), [x + y, 3, 7])
-

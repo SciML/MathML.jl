@@ -56,16 +56,22 @@ MathML.parse_str(str)
 xstr = xml"<apply><power/><ci>x</ci><cn>3</cn></apply>"
 MathML.parse_doc(xstr)
 # x^3
-
 ```
 
 Check the tests in `test/parse.jl` to see a more exaustive list of what is covered.
 
 ## TODO:
-* bound variables like bvar
-* piecewise
-* fix /sep tags in cn
 * calculus: diff, maybe int (less important)
+    - `eq` nodes sometimes needs to be ~ and sometimes needs to be =
+        - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq>
+    - how to handle \<apply>\<diff/>\<ci>f\</ci>\</apply> with no IV?
+* bound variables like bvar
+* piecewise, todo make heaviside work
+* fix sep/ tags in ci, take `type` attribute into account 
+    - \<ci type="vector">V\</ci> -> `Vector{Num}`, 
+    - I think this works as I default to num, todo add test
 
 ## DONE:
 * nested apply
+* fix sep/ tags in cn, take `type` attribute into account 
+    - rational, e-notation, complex, complex polar

@@ -17,11 +17,48 @@ function parse_doc(doc)
     parse_node(node)
 end
 
+"""
+    parse_cn(node)
+
+parse a <cn> node 
+"""
 function parse_cn(node)
-    elements(node) != EzXML.Node[] && error("node cant have elements rn, check if </sep> is in the node")
-    Meta.parse(node.content)
+    # elements(node) != EzXML.Node[] && error("node cant have elements rn, check if </sep> is in the node")
+    # this isnt great might want to check that `sep` actually shows up
+    if haskey(node, "type") && elements(node) != EzXML.Node[]
+        parse_cn_w_sep(node)
+    else 
+        Meta.parse(node.content)
+    end
 end
 
+"""
+    parse_cn_w_sep(node)
+
+parse a <cn type=".."> node 
+where type ∈ ["e-notation", "rational", "complex-cartesian", "complex-polar"]
+"""
+function parse_cn_w_sep(node)
+    x1, x2 = map(x->Meta.parse(x.content), findall("//text()", node))
+    t = node["type"]
+    if t == "e-notation"
+        x1 * exp10(x2)
+    elseif t == "rational"
+        Rational(x1, x2)
+    elseif t == "complex-cartesian"
+        Complex(x1, x2)
+    elseif t == "complex-polar"
+        x1 * exp(x2*im)
+    else 
+        error("$t in parse_cn_w_sep, somethings wrong")
+    end
+end
+
+"""
+    parse_ci(node)
+
+parse a <ci> node 
+"""
 function parse_ci(node)
     c = Meta.parse(strip(node.content))
     Num(Variable(c))
@@ -45,10 +82,10 @@ function custom_root(x)
 end
 
 tagmap = Dict{String,Function}(
-    "ci" => parse_ci,
     "cn" => parse_cn,
-    "degree" => x-> parse_node(x.firstelement),
-    "apply" => parse_apply, # will this work???
+    "ci" => parse_ci,
+    "degree" => x-> parse_node(x.firstelement), # won't work for all cases
+    "apply" => parse_apply,
     "math" => x -> map(parse_node, elements(x)),
     "vector" => x -> map(parse_node, elements(x)),
 )
@@ -56,7 +93,8 @@ tagmap = Dict{String,Function}(
 # need to check the arities 
 # units handling??
 applymap = Dict{String,Function}(
-    "eq" => x -> Symbolics.:~(x...), # arity 2
+    # eq sometimes needs to be ~ and sometimes needs to be =, not sure what the soln is
+    "eq" => x -> Symbolics.:~(x...), # arity 2, 
     "times" => Base.prod, # arity 2, but prod fine
     # "prod" => Base.prod, 
     "divide" => x -> Base.:/(x...),
