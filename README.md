@@ -67,6 +67,15 @@ str = """
 expand_derivatives(MathML.parse_str(str))
 # 12(x^2)
 
+# there is also a macro @MathML_str to directly call `parse_str`
+ml = MathML"""
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+expand_derivatives(ml)
+# 12(x^2)
 ```
 
 Check the tests in `test/parse.jl` to see a more exaustive list of what is covered.
