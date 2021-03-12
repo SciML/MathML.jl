@@ -56,22 +56,35 @@ MathML.parse_str(str)
 xstr = xml"<apply><power/><ci>x</ci><cn>3</cn></apply>"
 MathML.parse_doc(xstr)
 # x^3
+
+# derivatives also work!
+str = """
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+expand_derivatives(MathML.parse_str(str))
+# 12(x^2)
+
 ```
 
 Check the tests in `test/parse.jl` to see a more exaustive list of what is covered.
 
 ## TODO:
-* calculus: diff, maybe int (less important)
+* calculus:
+    - partial derivatives `partialdiff` tags
+    - integration `int` tags
     - `eq` nodes sometimes needs to be ~ and sometimes needs to be =
-        - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq>
-    - how to handle \<apply>\<diff/>\<ci>f\</ci>\</apply> with no IV?
-* bound variables like bvar
-* piecewise, todo make heaviside work
-* fix sep/ tags in ci, take `type` attribute into account 
-    - \<ci type="vector">V\</ci> -> `Vector{Num}`, 
-    - I think this works as I default to num, todo add test
+        - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq> (I think solution is `Symbolics.diff2term`)
+    - `diff`s with no independent variable: like `<apply><diff/><ci>f</ci></apply>`
+* `piecewise` tags: make heaviside test work
+* fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156 
+* fix `sep` tags in `ci`s, take `type` attribute into account
 
 ## DONE:
 * nested apply
 * fix sep/ tags in cn, take `type` attribute into account 
     - rational, e-notation, complex, complex polar
+* basic diff handling
+* bound variables like bvar, might be lingering issues though

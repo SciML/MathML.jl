@@ -39,7 +39,10 @@ parse a <cn type=".."> node
 where type ∈ ["e-notation", "rational", "complex-cartesian", "complex-polar"]
 """
 function parse_cn_w_sep(node)
-    x1, x2 = map(x->Meta.parse(x.content), findall("//text()", node))
+    # node = clean_attributes(node)
+    txts = findall("//text()", node)
+    length(txts) != 2 && error("stop, collaborate, and listen!, problem with <cn>")
+    x1, x2 = map(x->Meta.parse(x.content), txts)
     t = node["type"]
     if t == "e-notation"
         x1 * exp10(x2)
@@ -55,6 +58,24 @@ function parse_cn_w_sep(node)
 end
 
 """
+remove all attributes neq to `type`
+this is an issue for undefined namespaces 
+https://github.com/JuliaIO/EzXML.jl/issues/156
+"""
+# function clean_attributes(node)
+#     print(node)
+#     attrs =attributes(node)
+#     for attr in attrs
+#         @show print(attr)
+#         if attr.name !== "type"
+#             delete!(node, attr.name)
+#         end
+#     end
+#     print(node)
+#     node
+# end
+
+"""
     parse_ci(node)
 
 parse a <ci> node 
@@ -63,6 +84,31 @@ function parse_ci(node)
     c = Meta.parse(strip(node.content))
     Num(Variable(c))
 end
+
+# """
+#     parse_piecewise(node)
+
+# parse a <piecewise> node 
+# want to recursively call ifelse on the pieces
+# """
+# function parse_piecewise(node)
+#     es = elements(node)
+#     IfElse.ifelse(a, b, 
+#         IfElse.ifelse(c, d, 
+#             IfElse.ifelse(e, f, otherwise)))
+# end
+
+# """
+#     parse_piece(node)
+
+# parse a <piece> node 
+# Each <piece> element contains exactly two children.
+# The conditional is the second child and the return is the first.
+# """
+# function parse_piece(node)
+#     ret, cond = parse_node.(elements(node))
+#     ret, cond
+# end
 
 """
     parse_apply(node)
@@ -77,18 +123,47 @@ function parse_apply(node)
     applymap[elms[1].name](cs)
 end
 
-function custom_root(x)
-    length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+"""
+    parse_bvar(node)
+
+parse a <bvar> node 
+"""
+function parse_bvar(node)
+    es = elements(node)
+    length(es) == 1 ? (parse_node(es[1]), 1) : Tuple(parse_node.(es))
+end
+
+"""
+    parse_diff(x)
+
+parse a <diff>
+Note: the input is not an xml node
+"""
+function parse_diff(x)
+    (iv, deg), num = x
+    D = Differential(iv)^deg
+    D(num)
 end
 
 tagmap = Dict{String,Function}(
     "cn" => parse_cn,
     "ci" => parse_ci,
+    
     "degree" => x-> parse_node(x.firstelement), # won't work for all cases
+    "bvar" => parse_bvar, # won't work for all cases
+    
+    # "piecewise" => parse_piecewise, 
+    # "piece" => parse_piece, 
+    # "otherwise" => x-> parse_node(x.firstelement), 
+
     "apply" => parse_apply,
     "math" => x -> map(parse_node, elements(x)),
     "vector" => x -> map(parse_node, elements(x)),
 )
+
+function custom_root(x)
+    length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+end
 
 # need to check the arities 
 # units handling??
@@ -165,7 +240,26 @@ applymap = Dict{String,Function}(
     # "mode" => Statistics.mode, # crazy mode isn't in Base
 
     "vector" => Base.identity,
-
+    
+    "diff" => parse_diff, #inputs are 
 
     # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
 )
+
+
+# function foo()
+#     node = 
+#     xml"""<cn type="e-notation" foo="molar_per_minute">5   <sep/>
+#            -2</cn>""".root
+#     bar(node)
+#     node
+# end 
+
+# function bar(node)
+#     baz(node)
+#     node
+# end
+
+# function baz(node)
+#     delete!(node, "foo")
+# end

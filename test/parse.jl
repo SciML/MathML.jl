@@ -34,23 +34,69 @@ str = """<cn type="complex-cartesian"> 12.3 <sep/> 5 </cn>"""
 @test isequal(MathML.parse_str(str), Complex(12.3, 5))
 
 # heaviside and nesting test
-# str = """
-# <piecewise>
-#   <piece>
-#     <apply><minus/><ci>x</ci></apply>
-#     <apply><lt/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-#   <piece>
-#     <cn>0</cn>
-#     <apply><eq/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-#   <piece>
-#     <ci>x</ci>
-#     <apply><gt/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-# </piecewise>
-# """
+str = """
+<piecewise>
+  <piece>
+    <apply><minus/><ci>x</ci></apply>
+    <apply><lt/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+  <piece>
+    <cn>0</cn>
+    <apply><eq/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+  <piece>
+    <ci>x</ci>
+    <apply><gt/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+</piecewise>
+"""
 
+str = """
+<piecewise>
+<piece>
+  <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <ci>fixmg</ci>
+        <apply>
+            <plus/>
+            <ci>RHSterm2_mgODE</ci>
+            <apply>
+              <times/>
+              <ci>RHSterm1_mgODE</ci>
+              <ci>pHODEterm1</ci>
+            </apply>
+        </apply>
+      </apply>
+      <apply>
+        <minus/>
+        <cn cellml:units="dimensionless">1</cn>
+        <apply>
+            <times/>
+            <ci>RHSterm1_mgODE</ci>
+            <ci>pHODEterm2</ci>
+        </apply>
+      </apply>
+  </apply>
+  <apply>
+      <leq/>
+      <ci>time</ci>
+      <cn cellml:units="minute">1</cn>
+  </apply>
+</piece>
+<otherwise>
+  <apply>
+      <times/>
+      <ci>fixmg</ci>
+      <ci>RHSterm2_mgODE</ci>
+  </apply>
+</otherwise>
+</piecewise>
+"""
+
+str = """<cn type="e-notation" cellml:units="molar_per_minute">5   <sep/>-2</cn>"""
+str = """<cn type="e-notation">5   <sep/>-2</cn>"""
 # quotient RoundingMode issue
 # str = "<apply><quotient/><ci>a</ci><ci>b</ci></apply>"
 # MathML.parse_str(str)
@@ -163,3 +209,26 @@ str = """
 </vector>
 """
 @test isequal(MathML.parse_str(str), [x + y, 3, 7])
+
+str = "<bvar><ci>x</ci></bvar>"
+@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 1))
+
+str = "<bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>"
+@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 2))
+
+str = """
+<apply><diff/>
+  <bvar><ci>x</ci></bvar>
+  <apply><sin/><ci>x</ci></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(MathML.parse_str(str)), cos(Num(Variable(:x))))
+
+str = """
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(MathML.parse_str(str)), 12*Num(Variable(:x))^2)
+
