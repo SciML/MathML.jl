@@ -57,3 +57,12 @@ utility macro for parsing xml strings
 macro xml_str(s)
     parsexml(s)
 end
+
+"""
+    @MathML_str(s)
+
+utility macro for parsing xml strings into symbolics
+"""
+macro MathML_str(s)
+    MathML.parse_str(s)
+end

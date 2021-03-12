@@ -232,3 +232,11 @@ str = """
 """
 @test isequal(expand_derivatives(MathML.parse_str(str)), 12*Num(Variable(:x))^2)
 
+# macro test
+ml = MathML"""
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(ml), 12*Num(Variable(:x))^2)
