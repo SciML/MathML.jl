@@ -22,7 +22,7 @@ str = "<apply><compose/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
 @test isequal(MathML.parse_str(str), x ∘ y ∘ z)
 
 str = """<cn type="rational">22<sep/>7</cn>"""
-@test isequal(MathML.parse_str(str), 22//7)
+@test isequal(MathML.parse_str(str), 22 // 7)
 
 str = """<cn type="e-notation">5<sep/>2</cn>"""
 @test isequal(MathML.parse_str(str), 500)
@@ -127,7 +127,7 @@ str = """
 <ci>y</ci>
 </apply>
 """
-@test isequal(MathML.parse_str(str), x/y)
+@test isequal(MathML.parse_str(str), x / y)
 
 #  
 str = "<apply><max/><cn>2</cn><cn>3</cn><cn>5</cn></apply>"
@@ -143,11 +143,11 @@ str = "<apply><minus/><cn>3</cn></apply>"
 
 #  
 str = "<apply><minus/><ci>x</ci><ci>y</ci></apply>"
-@test isequal(MathML.parse_str(str), x-y)
+@test isequal(MathML.parse_str(str), x - y)
 
 #  
 str = "<apply><plus/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
-@test isequal(MathML.parse_str(str), x+y+z)
+@test isequal(MathML.parse_str(str), x + y + z)
 
 #  
 str = "<apply><rem/><ci>x</ci><ci>y</ci></apply>"
@@ -230,7 +230,7 @@ str = """
   <apply><power/><ci>x</ci><cn>4</cn></apply>
 </apply>
 """
-@test isequal(expand_derivatives(MathML.parse_str(str)), 12*Num(Variable(:x))^2)
+@test isequal(expand_derivatives(MathML.parse_str(str)), 12 * Num(Variable(:x))^2)
 
 # macro test
 ml = MathML"""
@@ -239,4 +239,15 @@ ml = MathML"""
   <apply><power/><ci>x</ci><cn>4</cn></apply>
 </apply>
 """
-@test isequal(expand_derivatives(ml), 12*Num(Variable(:x))^2)
+@test isequal(expand_derivatives(ml), 12 * Num(Variable(:x))^2)
+
+# iv test
+MathML"""
+<apply>
+  <diff/>
+    <bvar>
+      <ci>t</ci>
+      </bvar>
+    <ci>x</ci>
+  </apply>
+"""

@@ -82,6 +82,7 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
 
 ## TODO:
 * calculus:
+    - ivars fix, make ODESystem(parse_node(readxml("lorenz.xml").root)) work
     - partial derivatives `partialdiff` tags
     - integration `int` tags
     - `eq` nodes sometimes needs to be ~ and sometimes needs to be =
@@ -90,6 +91,7 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
 * `piecewise` tags: make heaviside test work
 * fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156 
 * fix `sep` tags in `ci`s, take `type` attribute into account
+* to_mathml: julia expr -> mathml. round tripping
 
 ## DONE:
 * nested apply

@@ -22,7 +22,7 @@ end
 
 function mathml_to_nums(node::EzXML.Node)
     namespace(node) != mathml_ns && error("need to provide mathml node")
-    cs = findall("//x:ci/text()", node, ["x"=>mathml_ns])
+    cs = findall("//x:ci/text()", node, ["x" => mathml_ns])
     vars = @. Symbol(strip(string(cs)))
     unique!(vars)
     @. Num(Variable{Symbolics.FnType{Tuple{Any},Real}}(vars))
@@ -46,19 +46,19 @@ function extract_mathml(doc::EzXML.Document)
 end
 
 function extract_mathml(node::EzXML.Node)
-    findall("//x:math", node, ["x"=>mathml_ns])
+    findall("//x:math", node, ["x" => mathml_ns])
 end
 
 """
     @xml_str(s)
 
-utility macro for parsing xml strings
+utility macro for parsing xml strings into node
 """
 macro xml_str(s)
-    parsexml(s)
+    parsexml(s).root
 end
 
-"""
+""" 
     @MathML_str(s)
 
 utility macro for parsing xml strings into symbolics

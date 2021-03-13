@@ -17,6 +17,11 @@ function parse_doc(doc)
     parse_node(node)
 end
 
+function parse_file(fn)
+    node = readxml(fn).root
+    parse_node(node)
+end
+
 """
     parse_cn(node)
 
@@ -36,13 +41,14 @@ end
     parse_cn_w_sep(node)
 
 parse a <cn type=".."> node 
+
 where type ∈ ["e-notation", "rational", "complex-cartesian", "complex-polar"]
 """
 function parse_cn_w_sep(node)
     # node = clean_attributes(node)
     txts = findall("//text()", node)
     length(txts) != 2 && error("stop, collaborate, and listen!, problem with <cn>")
-    x1, x2 = map(x->Meta.parse(x.content), txts)
+    x1, x2 = map(x -> Meta.parse(x.content), txts)
     t = node["type"]
     if t == "e-notation"
         x1 * exp10(x2)
@@ -51,17 +57,17 @@ function parse_cn_w_sep(node)
     elseif t == "complex-cartesian"
         Complex(x1, x2)
     elseif t == "complex-polar"
-        x1 * exp(x2*im)
+        x1 * exp(x2 * im)
     else 
         error("$t in parse_cn_w_sep, somethings wrong")
     end
 end
 
-"""
-remove all attributes neq to `type`
-this is an issue for undefined namespaces 
-https://github.com/JuliaIO/EzXML.jl/issues/156
-"""
+# """
+# remove all attributes neq to `type`
+# this is an issue for undefined namespaces 
+# https://github.com/JuliaIO/EzXML.jl/issues/156
+# """
 # function clean_attributes(node)
 #     print(node)
 #     attrs =attributes(node)
@@ -114,6 +120,7 @@ end
     parse_apply(node)
 
 parse an <apply> node into Symbolics form
+
 how to deal w apply within apply, need to ensure we've hit bottom
 """
 function parse_apply(node)
@@ -137,21 +144,23 @@ end
     parse_diff(x)
 
 parse a <diff>
-Note: the input is not an xml node
+
 """
-function parse_diff(x)
-    (iv, deg), num = x
+function parse_diff(a)
+    (iv, deg), x = a
+    # num = Num(Symbolics.Sym{Symbolics.FnType{Tuple{Real},Real}}(Symbol(x))(iv))
     D = Differential(iv)^deg
-    D(num)
+    D(x)
 end
 
 tagmap = Dict{String,Function}(
     "cn" => parse_cn,
     "ci" => parse_ci,
     
-    "degree" => x-> parse_node(x.firstelement), # won't work for all cases
+    "degree" => x -> parse_node(x.firstelement), # won't work for all cases
     "bvar" => parse_bvar, # won't work for all cases
-    
+    # "diff" => parse_diff, #inputs are 
+
     # "piecewise" => parse_piecewise, 
     # "piece" => parse_piece, 
     # "otherwise" => x-> parse_node(x.firstelement), 
@@ -160,9 +169,15 @@ tagmap = Dict{String,Function}(
     "math" => x -> map(parse_node, elements(x)),
     "vector" => x -> map(parse_node, elements(x)),
 )
-
+    
 function custom_root(x)
     length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+end
+
+"ensure theres only one independent variable, returns false if more than one iv"
+function check_ivs(node)
+    x = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
+    all(y -> y.content == x[1].content, x)
 end
 
 # need to check the arities 
@@ -240,26 +255,6 @@ applymap = Dict{String,Function}(
     # "mode" => Statistics.mode, # crazy mode isn't in Base
 
     "vector" => Base.identity,
-    
-    "diff" => parse_diff, #inputs are 
-
+    "diff" => parse_diff,
     # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
 )
-
-
-# function foo()
-#     node = 
-#     xml"""<cn type="e-notation" foo="molar_per_minute">5   <sep/>
-#            -2</cn>""".root
-#     bar(node)
-#     node
-# end 
-
-# function bar(node)
-#     baz(node)
-#     node
-# end
-
-# function baz(node)
-#     delete!(node, "foo")
-# end
