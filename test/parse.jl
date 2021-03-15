@@ -16,7 +16,7 @@ true_eqs = [
 ]
 @test isequal(eqs, true_eqs)
 
-@variables x y z
+@variables w x y z a b t
 
 str = "<apply><compose/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
 @test isequal(MathML.parse_str(str), x ∘ y ∘ z)
@@ -50,6 +50,7 @@ str = """
   </piece>
 </piecewise>
 """
+# MathML.parse_str(str) # no <otherwise>
 
 str = """
 <piecewise>
@@ -58,48 +59,47 @@ str = """
       <divide/>
       <apply>
         <times/>
-        <ci>fixmg</ci>
+        <ci>x</ci>
         <apply>
             <plus/>
-            <ci>RHSterm2_mgODE</ci>
+            <ci>y</ci>
             <apply>
               <times/>
-              <ci>RHSterm1_mgODE</ci>
-              <ci>pHODEterm1</ci>
+              <ci>z</ci>
+              <ci>a</ci>
             </apply>
         </apply>
       </apply>
       <apply>
         <minus/>
-        <cn cellml:units="dimensionless">1</cn>
+        <cn>1</cn>
         <apply>
             <times/>
-            <ci>RHSterm1_mgODE</ci>
-            <ci>pHODEterm2</ci>
+            <ci>z</ci>
+            <ci>b</ci>
         </apply>
       </apply>
   </apply>
   <apply>
       <leq/>
-      <ci>time</ci>
-      <cn cellml:units="minute">1</cn>
+      <ci>t</ci>
+      <cn>1</cn>
   </apply>
 </piece>
 <otherwise>
   <apply>
       <times/>
-      <ci>fixmg</ci>
-      <ci>RHSterm2_mgODE</ci>
+      <ci>x</ci>
+      <ci>y</ci>
   </apply>
 </otherwise>
 </piecewise>
 """
-
-str = """<cn type="e-notation" cellml:units="molar_per_minute">5   <sep/>-2</cn>"""
-str = """<cn type="e-notation">5   <sep/>-2</cn>"""
-# quotient RoundingMode issue
-# str = "<apply><quotient/><ci>a</ci><ci>b</ci></apply>"
-# MathML.parse_str(str)
+@test isequal(MathML.parse_str(str), 
+  IfElse.ifelse(
+    IfElse.ifelse(1 - t > 0, 1, 0) > 0.5,
+     x * (y + a * z) * ((1 - (b * z))^-1),
+      x * y))
 
 # factorial
 str = "<apply><factorial/><ci>x</ci></apply>"

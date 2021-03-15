@@ -63,24 +63,6 @@ function parse_cn_w_sep(node)
     end
 end
 
-# """
-# remove all attributes neq to `type`
-# this is an issue for undefined namespaces
-# https://github.com/JuliaIO/EzXML.jl/issues/156
-# """
-# function clean_attributes(node)
-#     print(node)
-#     attrs =attributes(node)
-#     for attr in attrs
-#         @show print(attr)
-#         if attr.name !== "type"
-#             delete!(node, attr.name)
-#         end
-#     end
-#     print(node)
-#     node
-# end
-
 """
     parse_ci(node)
 
@@ -118,34 +100,9 @@ function process_piece(node, otherwise)
         return parse_node(firstelement(node))
     elseif nodename(node) == "piece"
         c = parse_node.(elements(node))
-        return Symbolics.IfElse.ifelse(c[2] > 0.5, c[1], otherwise)
+        return IfElse.ifelse(c[2] > 0.5, c[1], otherwise)
     end
 end
-
-# """
-#     parse_piecewise(node)
-
-# parse a <piecewise> node
-# want to recursively call ifelse on the pieces
-# """
-# function parse_piecewise(node)
-#     es = elements(node)
-#     IfElse.ifelse(a, b,
-#         IfElse.ifelse(c, d,
-#             IfElse.ifelse(e, f, otherwise)))
-# end
-
-# """
-#     parse_piece(node)
-
-# parse a <piece> node
-# Each <piece> element contains exactly two children.
-# The conditional is the second child and the return is the first.
-# """
-# function parse_piece(node)
-#     ret, cond = parse_node.(elements(node))
-#     ret, cond
-# end
 
 """
     parse_apply(node)
@@ -190,11 +147,8 @@ tagmap = Dict{String,Function}(
 
     "degree" => x -> parse_node(x.firstelement), # won't work for all cases
     "bvar" => parse_bvar, # won't work for all cases
-    # "diff" => parse_diff, #inputs are
 
     "piecewise" => parse_piecewise,
-    # "piece" => parse_piece,
-    # "otherwise" => x-> parse_node(x.firstelement),
 
     "apply" => parse_apply,
     "math" => x -> map(parse_node, elements(x)),
@@ -211,7 +165,7 @@ function check_ivs(node)
     all(y -> y.content == x[1].content, x)
 end
 
-H(x) = Symbolics.IfElse.ifelse(x > 0, one(x), zero(x))
+H(x) = IfElse.ifelse(x > 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
 heaviside_or(x) = length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
