@@ -153,15 +153,13 @@ parse a <lambda> node
 </lambda>
 ```
 """
-# re: `first()` this is ignoring degree. not sure if that matters, but it's weird that parse_bvar gives tuples 
-# args = Tuple(
-    # args -> eval(fex)(args...) 
 function parse_lambda(node)
     es = elements(node)
-    vars = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
+    vars = findall("//bvar", node)
     args = first.(parse_bvar.(vars))
     num = parse_apply(es[end])
-    fex = build_function(num, args...)
+    # doing oop for now
+    eval(build_function([num], args...)[1])
 end
 
 tagmap = Dict{String,Function}(

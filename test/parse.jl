@@ -241,17 +241,6 @@ ml = MathML"""
 """
 @test isequal(expand_derivatives(ml), 12 * Num(Variable(:x))^2)
 
-# iv test
-MathML"""
-<apply>
-  <diff/>
-    <bvar>
-      <ci>t</ci>
-      </bvar>
-    <ci>x</ci>
-  </apply>
-"""
-
 str = """
   <lambda>
     <bvar>
@@ -267,11 +256,6 @@ str = """
     </apply>
   </lambda>
 """
-xml = parsexml(str).root
-parse_lambda(xml)
-f_expr = parse_str(str)
-
-f = eval(ml)
-f(3,5)
-ml(3,5)
-@test 
+f = parse_str(str)
+@test f(3,5) == [243]
+@test isequal(f(x, y), [x^y])
