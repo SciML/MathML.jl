@@ -251,3 +251,27 @@ MathML"""
     <ci>x</ci>
   </apply>
 """
+
+str = """
+  <lambda>
+    <bvar>
+      <ci> x </ci>
+    </bvar>
+    <bvar>
+      <ci> y </ci>
+    </bvar>
+    <apply>
+      <power/>
+      <ci> x </ci>
+      <ci> y </ci>
+    </apply>
+  </lambda>
+"""
+xml = parsexml(str).root
+parse_lambda(xml)
+f_expr = parse_str(str)
+
+f = eval(ml)
+f(3,5)
+ml(3,5)
+@test 

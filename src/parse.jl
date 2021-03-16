@@ -141,6 +141,29 @@ function parse_diff(a)
     D(x)
 end
 
+"""
+    parse_lambda(node)
+
+parse a <lambda> node
+
+```xml
+<lambda>
+  <bvar> x1 </bvar><bvar> xn </bvar>
+   expression-in-x1-xn 
+</lambda>
+```
+"""
+# re: `first()` this is ignoring degree. not sure if that matters, but it's weird that parse_bvar gives tuples 
+# args = Tuple(
+    # args -> eval(fex)(args...) 
+function parse_lambda(node)
+    es = elements(node)
+    vars = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
+    args = first.(parse_bvar.(vars))
+    num = parse_apply(es[end])
+    fex = build_function(num, args...)
+end
+
 tagmap = Dict{String,Function}(
     "cn" => parse_cn,
     "ci" => parse_ci,
@@ -153,6 +176,7 @@ tagmap = Dict{String,Function}(
     "apply" => parse_apply,
     "math" => x -> map(parse_node, elements(x)),
     "vector" => x -> map(parse_node, elements(x)),
+    "lambda" => parse_lambda,
 )
 
 function custom_root(x)
