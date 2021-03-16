@@ -241,13 +241,21 @@ ml = MathML"""
 """
 @test isequal(expand_derivatives(ml), 12 * Num(Variable(:x))^2)
 
-# iv test
-MathML"""
-<apply>
-  <diff/>
+str = """
+  <lambda>
     <bvar>
-      <ci>t</ci>
-      </bvar>
-    <ci>x</ci>
-  </apply>
+      <ci> x </ci>
+    </bvar>
+    <bvar>
+      <ci> y </ci>
+    </bvar>
+    <apply>
+      <power/>
+      <ci> x </ci>
+      <ci> y </ci>
+    </apply>
+  </lambda>
 """
+f = parse_str(str)
+@test f(3,5) == [243]
+@test isequal(f(x, y), [x^y])
