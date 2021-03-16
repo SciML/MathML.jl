@@ -29,24 +29,14 @@ num = parse_node(xml.root)
 # 1-element Vector{Num}:
 #  S1*compartment*k1
 
-xml = xml"""
-<math xmlns="http://www.w3.org/1998/Math/MathML">
-    <apply>
-       <eq/>
-       <ci>T</ci>
-       <ci>Par_94</ci>
-    </apply>
-    <apply>
-       <eq/>
-       <ci>I</ci>
-       <ci>Par_90</ci>
-    </apply>
-</math>"""
-
-num = parse_node(xml.root)
-# 2-element Vector{Equation}:
-#  T ~ Par_94
-#  I ~ Par_90
+# to pretty print the tree use `print_tree`
+print_tree(xml.root)
+# math
+# └─ apply
+#    ├─ times
+#    ├─ ci
+#    ├─ ci
+#    └─ ci
 
 # you can also just go directly from EzXML.Document or String
 str = "<apply><power/><ci>x</ci><cn>3</cn></apply>"

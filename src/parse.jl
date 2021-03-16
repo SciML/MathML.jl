@@ -155,7 +155,9 @@ parse a <lambda> node
 """
 function parse_lambda(node)
     es = elements(node)
-    vars = findall("//bvar", node)
+    # weirdness 
+    # vars = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
+    vars = findall("//bvar", node) # works in tests
     args = first.(parse_bvar.(vars))
     num = parse_apply(es[end])
     # doing oop for now
