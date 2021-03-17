@@ -16,13 +16,13 @@ true_eqs = [
 ]
 @test isequal(eqs, true_eqs)
 
-@variables x y z
+@variables w x y z a b t
 
 str = "<apply><compose/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
 @test isequal(MathML.parse_str(str), x ∘ y ∘ z)
 
 str = """<cn type="rational">22<sep/>7</cn>"""
-@test isequal(MathML.parse_str(str), 22//7)
+@test isequal(MathML.parse_str(str), 22 // 7)
 
 str = """<cn type="e-notation">5<sep/>2</cn>"""
 @test isequal(MathML.parse_str(str), 500)
@@ -34,26 +34,72 @@ str = """<cn type="complex-cartesian"> 12.3 <sep/> 5 </cn>"""
 @test isequal(MathML.parse_str(str), Complex(12.3, 5))
 
 # heaviside and nesting test
-# str = """
-# <piecewise>
-#   <piece>
-#     <apply><minus/><ci>x</ci></apply>
-#     <apply><lt/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-#   <piece>
-#     <cn>0</cn>
-#     <apply><eq/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-#   <piece>
-#     <ci>x</ci>
-#     <apply><gt/><ci>x</ci><cn>0</cn></apply>
-#   </piece>
-# </piecewise>
-# """
+str = """
+<piecewise>
+  <piece>
+    <apply><minus/><ci>x</ci></apply>
+    <apply><lt/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+  <piece>
+    <cn>0</cn>
+    <apply><eq/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+  <piece>
+    <ci>x</ci>
+    <apply><gt/><ci>x</ci><cn>0</cn></apply>
+  </piece>
+</piecewise>
+"""
+# MathML.parse_str(str) # no <otherwise>
 
-# quotient RoundingMode issue
-# str = "<apply><quotient/><ci>a</ci><ci>b</ci></apply>"
-# MathML.parse_str(str)
+str = """
+<piecewise>
+<piece>
+  <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <ci>x</ci>
+        <apply>
+            <plus/>
+            <ci>y</ci>
+            <apply>
+              <times/>
+              <ci>z</ci>
+              <ci>a</ci>
+            </apply>
+        </apply>
+      </apply>
+      <apply>
+        <minus/>
+        <cn>1</cn>
+        <apply>
+            <times/>
+            <ci>z</ci>
+            <ci>b</ci>
+        </apply>
+      </apply>
+  </apply>
+  <apply>
+      <leq/>
+      <ci>t</ci>
+      <cn>1</cn>
+  </apply>
+</piece>
+<otherwise>
+  <apply>
+      <times/>
+      <ci>x</ci>
+      <ci>y</ci>
+  </apply>
+</otherwise>
+</piecewise>
+"""
+@test isequal(MathML.parse_str(str), 
+  IfElse.ifelse(
+    IfElse.ifelse(1 - t > 0, 1, 0) > 0.5,
+     x * (y + a * z) * ((1 - (b * z))^-1),
+      x * y))
 
 # factorial
 str = "<apply><factorial/><ci>x</ci></apply>"
@@ -81,7 +127,7 @@ str = """
 <ci>y</ci>
 </apply>
 """
-@test isequal(MathML.parse_str(str), x/y)
+@test isequal(MathML.parse_str(str), x / y)
 
 #  
 str = "<apply><max/><cn>2</cn><cn>3</cn><cn>5</cn></apply>"
@@ -97,11 +143,11 @@ str = "<apply><minus/><cn>3</cn></apply>"
 
 #  
 str = "<apply><minus/><ci>x</ci><ci>y</ci></apply>"
-@test isequal(MathML.parse_str(str), x-y)
+@test isequal(MathML.parse_str(str), x - y)
 
 #  
 str = "<apply><plus/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
-@test isequal(MathML.parse_str(str), x+y+z)
+@test isequal(MathML.parse_str(str), x + y + z)
 
 #  
 str = "<apply><rem/><ci>x</ci><ci>y</ci></apply>"
@@ -163,3 +209,53 @@ str = """
 </vector>
 """
 @test isequal(MathML.parse_str(str), [x + y, 3, 7])
+
+str = "<bvar><ci>x</ci></bvar>"
+@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 1))
+
+str = "<bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>"
+@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 2))
+
+str = """
+<apply><diff/>
+  <bvar><ci>x</ci></bvar>
+  <apply><sin/><ci>x</ci></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(MathML.parse_str(str)), cos(Num(Variable(:x))))
+
+str = """
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(MathML.parse_str(str)), 12 * Num(Variable(:x))^2)
+
+# macro test
+ml = MathML"""
+<apply><diff/>
+  <bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>
+  <apply><power/><ci>x</ci><cn>4</cn></apply>
+</apply>
+"""
+@test isequal(expand_derivatives(ml), 12 * Num(Variable(:x))^2)
+
+str = """
+  <lambda>
+    <bvar>
+      <ci> x </ci>
+    </bvar>
+    <bvar>
+      <ci> y </ci>
+    </bvar>
+    <apply>
+      <power/>
+      <ci> x </ci>
+      <ci> y </ci>
+    </apply>
+  </lambda>
+"""
+f = parse_str(str)
+@test f(3,5) == [243]
+@test isequal(f(x, y), [x^y])
