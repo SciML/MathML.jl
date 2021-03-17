@@ -1,3 +1,5 @@
+using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
+
 # these tests mimic the README examples 
 fn = "data/math.xml"
 doc = readxml(fn)
@@ -257,5 +259,7 @@ str = """
   </lambda>
 """
 f = parse_str(str)
-@test f(3,5) == [243]
+xml = parsexml(str).root
+g = parse_lambda(xml)
+@test g(3,5) == f(3,5) == [243]
 @test isequal(f(x, y), [x^y])
