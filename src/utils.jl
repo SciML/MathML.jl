@@ -66,3 +66,8 @@ utility macro for parsing xml strings into symbolics
 macro MathML_str(s)
     MathML.parse_str(s)
 end
+
+# bindings for viewing call tree
+AbstractTrees.children(n::EzXML.Node) = elements(n)
+AbstractTrees.printnode(io::IO, node::EzXML.Node) = print(io, getproperty(node, :name))
+AbstractTrees.nodetype(::EzXML.Node) = EzXML.Node

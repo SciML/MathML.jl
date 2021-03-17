@@ -1,6 +1,6 @@
 module MathML
 
-using EzXML, Symbolics, Statistics, IfElse
+using EzXML, Symbolics, Statistics, IfElse, AbstractTrees
 
 include("parse.jl")
 include("utils.jl")
