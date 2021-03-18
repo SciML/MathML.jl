@@ -163,18 +163,3 @@ function parse_lambda(node)
     num = parse_apply(es[end])
     eval(build_function([num], args...)[1])
 end
-
-function parse_apply_ci(node)
-    es= elements(node)
-    name, args = Symbol(es[1]), es[2:end]
-    :(
-        function $(name)(f, args...)
-            ()
-    )
-    
-end
-
-function byname(name, args)
-    f = Meta.parse(name)
-    eval(:($f($args...)))
-end
