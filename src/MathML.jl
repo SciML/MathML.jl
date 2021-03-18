@@ -2,6 +2,7 @@ module MathML
 
 using EzXML, Symbolics, Statistics, IfElse, AbstractTrees
 
+include("maps.jl")
 include("parse.jl")
 include("utils.jl")
 

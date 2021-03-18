@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+   <apply>
+      <times />
+      <ci>cell</ci>
+      <apply>
+         <ci>max</ci>
+         <apply>
+            <times />
+            <ci>v0</ci>
+            <apply>
+               <plus />
+               <cn>1</cn>
+               <apply>
+                  <times />
+                  <ci>ep0543</ci>
+                  <apply>
+                     <ln />
+                     <apply>
+                        <divide />
+                        <ci>s_0543</ci>
+                        <ci>ic0543</ci>
+                     </apply>
+                  </apply>
+               </apply>
+            </apply>
+         </apply>
+         <ci>zero_flux</ci>
+      </apply>
+   </apply>
+</math> 

@@ -71,3 +71,19 @@ end
 AbstractTrees.children(n::EzXML.Node) = elements(n)
 AbstractTrees.printnode(io::IO, node::EzXML.Node) = print(io, getproperty(node, :name))
 AbstractTrees.nodetype(::EzXML.Node) = EzXML.Node
+
+function custom_root(x)
+    length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+end
+
+"ensure theres only one independent variable, returns false if more than one iv"
+function check_ivs(node)
+    x = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
+    all(y -> y.content == x[1].content, x)
+end
+
+# conditional hack
+H(x) = IfElse.ifelse(x > 0, one(x), zero(x))
+const ϵ = eps(Float64)
+frac(x) = 0.5 - atan(cot(π * x)) / π
+heaviside_or(x) = length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
