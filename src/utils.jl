@@ -49,6 +49,12 @@ function extract_mathml(node::EzXML.Node)
     findall("//x:math", node, ["x" => mathml_ns])
 end
 
+"""
+    @disambiguate_equality!
+    
+utility function to replace <eq> inside piecewise subtrees to 
+disambiguate from the assignement <eq>
+"""
 function disambiguate_equality!(node)
     nodes = findall("//x:piecewise//x:eq", node, ["x" => mathml_ns])
     for n in nodes
@@ -59,7 +65,7 @@ end
 """
     @xml_str(s)
     
-utility macro for parsing xml strings
+utility macro for parsing xml strings into node
 """
 macro xml_str(s)
     parsexml(s).root
@@ -67,7 +73,7 @@ end
 
 """ 
     @MathML_str(s)
-    
+
 utility macro for parsing xml strings into symbolics
 """
 macro MathML_str(s)
