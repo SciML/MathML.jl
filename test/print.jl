@@ -1,9 +1,8 @@
 xml = readxml("data/math.xml").root
 
-open("tree.txt", "w") do io
-    print_tree(io, xml)
-end;
-
+io = IOBuffer()
+print_tree(io, xml)
+ser = String(take!(io))
 str = """
 math
 └─ apply
@@ -12,6 +11,4 @@ math
    ├─ ci
    └─ ci
 """
-@test read("tree.txt", String) == str
-
-rm("tree.txt")
+@test strip(ser) == strip(str)

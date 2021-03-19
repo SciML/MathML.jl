@@ -21,12 +21,12 @@ xml = xml"""<math xmlns="http://www.w3.org/1998/Math/MathML">
    </apply>
 </math>"""
 
-num = parse_node(xml.root)
+num = parse_node(xml)
 # 1-element Vector{Num}:
 #  S1*compartment*k1
 
 # to pretty print the tree use `print_tree`
-print_tree(xml.root)
+print_tree(xml)
 # math
 # └─ apply
 #    ├─ times
@@ -37,10 +37,6 @@ print_tree(xml.root)
 # you can also just go directly from EzXML.Document or String
 str = "<apply><power/><ci>x</ci><cn>3</cn></apply>"
 MathML.parse_str(str)
-# x^3
-
-xstr = xml"<apply><power/><ci>x</ci><cn>3</cn></apply>"
-MathML.parse_doc(xstr)
 # x^3
 
 # derivatives also work!
