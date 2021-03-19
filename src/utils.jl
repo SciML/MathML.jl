@@ -58,13 +58,14 @@ end
 
 """
     @xml_str(s)
+    
 utility macro for parsing xml strings
 """
 macro xml_str(s)
     parsexml(s).root
 end
 
-"""
+""" 
     @MathML_str(s)
     
 utility macro for parsing xml strings into symbolics
