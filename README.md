@@ -11,18 +11,14 @@ MathML Specification: https://www.w3.org/TR/MathML3/
 
 ## Examples:
 ```julia
-using MathML, EzXML, Symbolics
-xml = xml"""
-<math xmlns="http://www.w3.org/1998/Math/MathML">
-  <apply>
-    <times/>
-    <ci> compartment 
-    </ci>
-    <ci> k1 
-    </ci>
-    <ci> S1 
-    </ci>
-  </apply>
+using MathML, EzXML, Symbolics, AbstractTrees
+xml = xml"""<math xmlns="http://www.w3.org/1998/Math/MathML">
+   <apply>
+      <times />
+      <ci>compartment</ci>
+      <ci>k1</ci>
+      <ci>S1</ci>
+   </apply>
 </math>"""
 
 num = parse_node(xml.root)
