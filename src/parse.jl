@@ -33,7 +33,7 @@ function parse_cn(node)
     if haskey(node, "type") && elements(node) != EzXML.Node[]
         parse_cn_w_sep(node)
     else
-        Meta.parse(node.content)
+        Float64(Meta.parse(node.content))
     end
 end
 
@@ -211,7 +211,7 @@ function check_ivs(node)
     all(y -> y.content == x[1].content, x)
 end
 
-H(x) = Symbolics.IfElse.ifelse(x > 0, one(x), zero(x))
+H(x) = Symbolics.IfElse.ifelse(x >= 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
 heaviside_or(x) = length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
@@ -234,6 +234,8 @@ applymap = Dict{String,Function}(
     "leq" => x -> H(x[2] - x[1]),
     "geq" => x -> H(x[1] - x[2]),
     "gt" => x -> H(x[1] - x[2] - ϵ),
+    "equal" => x -> H(x[1] - x[2]) * H(x[2] - x[1]),
+    "neq" => x -> 1 - H(x[1] - x[2]) * H(x[2] - x[1]),
 
     # "lt" => x -> Base.foldl(Base.:<, x),
     # "leq" => x -> Base.foldl(Base.:≤, x),
@@ -316,3 +318,4 @@ applymap = Dict{String,Function}(
     "diff" => parse_diff,
     # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
 )
+
