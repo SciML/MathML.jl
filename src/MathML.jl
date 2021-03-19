@@ -1,4 +1,8 @@
+"""
+$(DocStringExtensions.README)
+"""
 module MathML
+using DocStringExtensions
 
 using EzXML, Symbolics, Statistics, IfElse, AbstractTrees
 
