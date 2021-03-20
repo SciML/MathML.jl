@@ -1,7 +1,10 @@
 # MathML
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://anandijain.github.io/MathML.jl/stable)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://anandijain.github.io/MathML.jl/dev)
+[![Github Action CI](https://github.com/SciML/MathML.jl/workflows/CI/badge.svg)](https://github.com/SciML/MathML.jl/actions)
+[![Coverage Status](https://coveralls.io/repos/github/SciML/MathML.jl/badge.svg?branch=main)](https://coveralls.io/github/SciML/MathML.jl?branch=main)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://SciML.github.io/MathML.jl/dev)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://SciML.github.io/MathML.jl/stable)
+[![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
 A parser for the [MathML](https://en.wikipedia.org/wiki/MathML) XML standard.
 
@@ -66,14 +69,10 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
 * calculus:
     - ivars fix, make ODESystem(parse_node(readxml("lorenz.xml").root)) work
     - partial derivatives `partialdiff` tags
-    - integration `int` tags
-    - `eq` nodes sometimes needs to be ~ and sometimes needs to be =
+    - integration `int` tags - needs https://github.com/JuliaSymbolics/Symbolics.jl/issues/58
         - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq> (I think solution is `Symbolics.diff2term`)
     - `diff`s with no independent variable: like `<apply><diff/><ci>f</ci></apply>`
-* `piecewise` tags: make heaviside test work
-* fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156 
-* fix `sep` tags in `ci`s, take `type` attribute into account
-* to_mathml: julia expr -> mathml. round tripping
+* to_mathml: julia expr -> mathml. round tripping 
 
 ## DONE:
 * nested apply
@@ -81,3 +80,8 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
     - rational, e-notation, complex, complex polar
 * basic diff handling
 * bound variables like bvar, might be lingering issues though
+* `eq` nodes sometimes needs to be ~ and sometimes needs to be =
+* fix `sep` tags in `ci`s, take `type` attribute into account
+* `piecewise` tags: make heaviside test work
+* fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156 
+    - parsers like SBML and CellMLToolkit should be handling
