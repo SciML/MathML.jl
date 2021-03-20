@@ -136,6 +136,7 @@ parse a <diff>
 """
 function parse_diff(a)
     (iv, deg), x = a
+    deg = trunc(Int, deg)
     # num = Num(Symbolics.Sym{Symbolics.FnType{Tuple{Real},Real}}(Symbol(x))(iv))
     D = Differential(iv)^deg
     D(x)

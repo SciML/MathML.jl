@@ -99,8 +99,8 @@ str = """
 """
 @test isequal(MathML.parse_str(str), 
   IfElse.ifelse(
-    IfElse.ifelse(1 - t > 0, 1, 0) > 0.5,
-     x * (y + a * z) * ((1 - (b * z))^-1),
+    IfElse.ifelse(1. - t >= 0, 1, 0) > 0.5,
+     x * (y + a * z) * ((1.0 - (b * z))^-1),
       x * y))
 
 # factorial
