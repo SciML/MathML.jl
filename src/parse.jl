@@ -33,7 +33,7 @@ function parse_cn(node)
     if haskey(node, "type") && elements(node) != EzXML.Node[]
         parse_cn_w_sep(node)
     else
-        Meta.parse(node.content)
+        Float64(Meta.parse(node.content))   # convert to Float64 for CellML compatibility
     end
 end
 
@@ -136,6 +136,7 @@ parse a <diff>
 """
 function parse_diff(a)
     (iv, deg), x = a
+    deg = trunc(Int, deg)
     # num = Num(Symbolics.Sym{Symbolics.FnType{Tuple{Real},Real}}(Symbol(x))(iv))
     D = Differential(iv)^deg
     D(x)
@@ -149,14 +150,14 @@ parse a <lambda> node
 ```xml
 <lambda>
   <bvar> x1 </bvar><bvar> xn </bvar>
-   expression-in-x1-xn 
+   expression-in-x1-xn
 </lambda>
 ```
 """
 function parse_lambda(node)
     es = elements(node)
     vars = findall("//x:bvar | //bvar", node, ["x" => MathML.mathml_ns])
-    # vars2 = findall("//bvar", node) # works in tests 
+    # vars2 = findall("//bvar", node) # works in tests
     # vars = union(vars, vars2) # FIX
 
     args = first.(parse_bvar.(vars))
