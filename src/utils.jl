@@ -3,12 +3,12 @@ const mathml_ns = "http://www.w3.org/1998/Math/MathML"
 """
     mathml_to_nums()
 
-given a filename or an `EzXML.Document` or `EzXML.Node`, 
+given a filename or an `EzXML.Document` or `EzXML.Node`,
 finds all of the <ci>s and defines them as Symbolics.jl Nums
 returns a Vector{Num}.
 Note, the root namespace needs to be MathML
 """
-function mathml_to_nums end 
+function mathml_to_nums end
 
 function mathml_to_nums(fn::AbstractString)
     doc = readxml(fn)
@@ -32,8 +32,8 @@ end
 """
     extract_mathml()
 
-given a filename, `EzXML.Document`, or `EzXML.Node` 
-returns all of the MathML nodes. 
+given a filename, `EzXML.Document`, or `EzXML.Node`
+returns all of the MathML nodes.
 """
 function extract_mathml end
 
@@ -46,7 +46,21 @@ function extract_mathml(doc::EzXML.Document)
 end
 
 function extract_mathml(node::EzXML.Node)
+    disambiguate_equality!(node)
     findall("//x:math", node, ["x" => mathml_ns])
+end
+
+"""
+    @disambiguate_equality!
+
+utility function to replace <eq> inside piecewise subtrees to
+disambiguate from the assignement <eq>
+"""
+function disambiguate_equality!(node)
+    nodes = findall("//x:piecewise//x:eq", node, ["x" => mathml_ns])
+    for n in nodes
+        setnodename!(n, "equal")
+    end
 end
 
 """
@@ -58,7 +72,7 @@ macro xml_str(s)
     parsexml(s).root
 end
 
-""" 
+"""
     @MathML_str(s)
 
 utility macro for parsing xml strings into symbolics
@@ -82,8 +96,8 @@ function check_ivs(node)
     all(y -> y.content == x[1].content, x)
 end
 
-# conditional hack
-H(x) = IfElse.ifelse(x > 0, one(x), zero(x))
+# conditional and rounding hacks
+H(x) = IfElse.ifelse(x >= 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
 heaviside_or(x) = length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
