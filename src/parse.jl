@@ -89,7 +89,7 @@ end
 
 function process_piece(node)
     if nodename(node) != "otherwise"
-        error("expect an otherwise")
+        @warn "expect an otherwise"
     else
         return parse_node(firstelement(node))
     end
