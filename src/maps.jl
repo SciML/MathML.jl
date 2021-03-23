@@ -119,4 +119,12 @@ tagmap = Dict{String,Function}(
     "math" => x -> map(parse_node, elements(x)),
     "vector" => x -> map(parse_node, elements(x)),
     "lambda" => parse_lambda,
+
+    # MathML defined constants
+    "pi" => x -> π,
+    "exponentiale" => x -> ℯ,
+    "notanumber" => x -> NaN,
+    "infinity" => x -> Inf,
+    "true" => x -> true,
+    "false" => x -> false,
 )
