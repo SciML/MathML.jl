@@ -46,7 +46,8 @@ where type ∈ ["e-notation", "rational", "complex-cartesian", "complex-polar"]
 """
 function parse_cn_w_sep(node)
     # node = clean_attributes(node)
-    txts = findall("text()", node)
+    # txts = findall("text()", node)
+    txts = [n for n in eachnode(node) if istext(n)]
     length(txts) != 2 && error("stop, collaborate, and listen!, problem with <cn>")
     x1, x2 = map(x -> Meta.parse(x.content), txts)
     t = node["type"]
@@ -76,32 +77,24 @@ end
 ########## Parse piecewise ###################################################
 
 function parse_piecewise(node)
-    return process_pieces(elements(node))
-end
+    ns = elements(node)
+    pieces = filter(x -> nodename(x) == "piece", ns)
+    others = filter(x -> nodename(x) == "otherwise", ns)
 
-function process_pieces(pieces)
-    if length(pieces) == 1
-        return process_piece(pieces[1])
+    if length(others) > 0
+        otherwise = parse_node(firstelement(others[1]))
     else
-        return process_piece(pieces[1], process_pieces(pieces[2:end]))
+        otherwise = 0.0
     end
+
+    return process_pieces(pieces, otherwise)
 end
 
-function process_piece(node)
-    if nodename(node) != "otherwise"
-        @warn "expect an otherwise"
-    else
-        return parse_node(firstelement(node))
-    end
-end
-
-function process_piece(node, otherwise)
-    if nodename(node) == "otherwise"
-        return parse_node(firstelement(node))
-    elseif nodename(node) == "piece"
-        c = parse_node.(elements(node))
-        return IfElse.ifelse(c[2] > 0.5, c[1], otherwise)
-    end
+function process_pieces(pieces, otherwise)
+    node = pieces[1]
+    c = parse_node.(elements(node))
+    return IfElse.ifelse(c[2] > 0.5, c[1],
+                length(pieces)==1 ? otherwise : process_pieces(pieces[2:end], otherwise))
 end
 
 """
