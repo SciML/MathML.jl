@@ -70,7 +70,8 @@ end
 parse a <ci> node
 """
 function parse_ci(node)
-    c = Meta.parse(strip(node.content))
+    # c = Symbol(Meta.parse(strip(node.content)))    
+    c = Symbol(string(strip(node.content)))
     Num(Variable(c))
 end
 
