@@ -33,7 +33,8 @@ function parse_cn(node)
     if haskey(node, "type") && elements(node) != EzXML.Node[]
         parse_cn_w_sep(node)
     else
-        Float64(Meta.parse(node.content))   # convert to Float64 for CellML compatibility
+        # Float64(Meta.parse(node.content))  
+        parse(Float64, node.content) # convert to Float64 for CellML compatibility
     end
 end
 
