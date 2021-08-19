@@ -73,7 +73,7 @@ parse a <ci> node
 function parse_ci(node)
     # c = Symbol(Meta.parse(strip(node.content)))    
     c = Symbol(string(strip(node.content)))
-    Num(Variable(c))
+    (@variables $c)[1]
 end
 
 ########## Parse piecewise ###################################################

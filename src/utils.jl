@@ -20,15 +20,6 @@ function mathml_to_nums(xml::EzXML.Document)
     mathml_to_nums(doc_root)
 end
 
-function mathml_to_nums(node::EzXML.Node)
-    namespace(node) != mathml_ns && error("need to provide mathml node")
-    cs = findall("//x:ci/text()", node, ["x" => mathml_ns])
-    vars = @. Symbol(strip(string(cs)))
-    unique!(vars)
-    @. Num(Variable{Symbolics.FnType{Tuple{Any},Real}}(vars))
-end
-
-
 """
     extract_mathml()
 
