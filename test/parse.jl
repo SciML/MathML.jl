@@ -1,5 +1,5 @@
 using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
-
+using Symbolics: variable
 # these tests mimic the README examples 
 fn = "data/math.xml"
 doc = readxml(fn)
@@ -213,10 +213,10 @@ str = """
 @test isequal(MathML.parse_str(str), [x + y, 3, 7])
 
 str = "<bvar><ci>x</ci></bvar>"
-@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 1))
+@test isequal(MathML.parse_str(str), (Num(variable(:x)), 1))
 
 str = "<bvar><ci>x</ci><degree><cn>2</cn></degree></bvar>"
-@test isequal(MathML.parse_str(str), (Num(Variable(:x)), 2))
+@test isequal(MathML.parse_str(str), (Num(variable(:x)), 2))
 
 str = """
 <apply><diff/>
@@ -224,7 +224,7 @@ str = """
   <apply><sin/><ci>x</ci></apply>
 </apply>
 """
-@test isequal(expand_derivatives(MathML.parse_str(str)), cos(Num(Variable(:x))))
+@test isequal(expand_derivatives(MathML.parse_str(str)), cos(Num(variable(:x))))
 
 str = """
 <apply><diff/>
@@ -232,7 +232,7 @@ str = """
   <apply><power/><ci>x</ci><cn>4</cn></apply>
 </apply>
 """
-@test isequal(expand_derivatives(MathML.parse_str(str)), 12 * Num(Variable(:x))^2)
+@test isequal(expand_derivatives(MathML.parse_str(str)), 12 * Num(variable(:x))^2)
 
 # macro test
 ml = MathML"""
@@ -241,7 +241,7 @@ ml = MathML"""
   <apply><power/><ci>x</ci><cn>4</cn></apply>
 </apply>
 """
-@test isequal(expand_derivatives(ml), 12 * Num(Variable(:x))^2)
+@test isequal(expand_derivatives(ml), 12 * Num(variable(:x))^2)
 
 str = """
   <lambda>
