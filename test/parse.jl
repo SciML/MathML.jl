@@ -105,7 +105,7 @@ str = """
 
 # factorial
 str = "<apply><factorial/><ci>x</ci></apply>"
-@test isequal(MathML.parse_str(str), factorial(x))
+@test isequal(MathML.parse_str(str), SpecialFunctions.gamma(1+x))
 
 str = "<apply><factorial/><cn>5</cn></apply>"
 @test MathML.parse_str(str) == 120
