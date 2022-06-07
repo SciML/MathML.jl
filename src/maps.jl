@@ -29,7 +29,7 @@ applymap = Dict{String,Function}(
     # "gt" => x -> Base.foldl(Base.:>, x),
 
     # "quotient" => x->Base.:div(x...), # broken, RoundingMode
-    "factorial" => x -> Base.factorial(x...),
+    "factorial" => x -> SpecialFunctions.gamma(1 .+ x[1]),
     "max" => x -> Base.max(x...),
     "min" => x -> Base.min(x...),
     "rem" => x -> Base.:rem(x...),
