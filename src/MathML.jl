@@ -5,7 +5,7 @@ module MathML
 using DocStringExtensions
 
 using EzXML, Symbolics, Statistics, IfElse, AbstractTrees
-import SpecialFunctions
+using SpecialFunctions: SpecialFunctions
 
 include("utils.jl")
 include("parse.jl")

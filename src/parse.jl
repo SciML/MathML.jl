@@ -4,22 +4,22 @@
 take a node and parse into Symbolics form
 """
 function parse_node(node)
-    tagmap[node.name](node)
+    return tagmap[node.name](node)
 end
 
 function parse_str(str)
     doc = parsexml(str)
-    parse_doc(doc)
+    return parse_doc(doc)
 end
 
 function parse_doc(doc)
     node = doc.root
-    parse_node(node)
+    return parse_node(node)
 end
 
 function parse_file(fn)
     node = readxml(fn).root
-    parse_node(node)
+    return parse_node(node)
 end
 
 """
@@ -73,7 +73,7 @@ parse a <ci> node
 function parse_ci(node)
     # c = Symbol(Meta.parse(strip(node.content)))    
     c = Symbol(string(strip(node.content)))
-    (@variables $c)[1]
+    return (@variables $c)[1]
 end
 
 ########## Parse piecewise ###################################################
@@ -96,7 +96,7 @@ function process_pieces(pieces, otherwise)
     node = pieces[1]
     c = parse_node.(elements(node))
     return IfElse.ifelse(c[2] > 0.5, c[1],
-                length(pieces)==1 ? otherwise : process_pieces(pieces[2:end], otherwise))
+                         length(pieces) == 1 ? otherwise : process_pieces(pieces[2:end], otherwise))
 end
 
 """
@@ -107,10 +107,11 @@ parse an <apply> node into Symbolics form
 how to deal w apply within apply, need to ensure we've hit bottom
 """
 function parse_apply(node)
-    node.name != "apply" && error("calling parse_apply requires the name of the element to be `apply`")
+    node.name != "apply" &&
+        error("calling parse_apply requires the name of the element to be `apply`")
     elms = elements(node)
     cs = parse_node.(elms[2:end])
-    applymap[elms[1].name](cs)
+    return applymap[elms[1].name](cs)
 end
 
 """
@@ -120,7 +121,7 @@ parse a <bvar> node
 """
 function parse_bvar(node)
     es = elements(node)
-    length(es) == 1 ? (parse_node(es[1]), 1) : Tuple(parse_node.(es))
+    return length(es) == 1 ? (parse_node(es[1]), 1) : Tuple(parse_node.(es))
 end
 
 """
@@ -134,7 +135,7 @@ function parse_diff(a)
     deg = trunc(Int, deg)
     # num = Num(Symbolics.Sym{Symbolics.FnType{Tuple{Real},Real}}(Symbol(x))(iv))
     D = Differential(iv)^deg
-    D(x)
+    return D(x)
 end
 
 """
@@ -157,5 +158,5 @@ function parse_lambda(node)
 
     args = first.(parse_bvar.(vars))
     num = parse_apply(es[end])
-    eval(build_function([num], args...)[1])
+    return eval(build_function([num], args...)[1])
 end
