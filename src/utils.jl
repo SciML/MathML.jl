@@ -91,4 +91,6 @@ end
 H(x) = IfElse.ifelse(x >= 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
-heaviside_or(x) = length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
+function heaviside_or(x)
+    length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
+end
