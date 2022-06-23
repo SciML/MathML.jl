@@ -96,7 +96,8 @@ function process_pieces(pieces, otherwise)
     node = pieces[1]
     c = parse_node.(elements(node))
     return IfElse.ifelse(c[2] > 0.5, c[1],
-                length(pieces)==1 ? otherwise : process_pieces(pieces[2:end], otherwise))
+                         length(pieces) == 1 ? otherwise :
+                         process_pieces(pieces[2:end], otherwise))
 end
 
 """
@@ -107,7 +108,8 @@ parse an <apply> node into Symbolics form
 how to deal w apply within apply, need to ensure we've hit bottom
 """
 function parse_apply(node)
-    node.name != "apply" && error("calling parse_apply requires the name of the element to be `apply`")
+    node.name != "apply" &&
+        error("calling parse_apply requires the name of the element to be `apply`")
     elms = elements(node)
     cs = parse_node.(elms[2:end])
     applymap[elms[1].name](cs)

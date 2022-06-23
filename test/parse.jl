@@ -30,7 +30,7 @@ str = """<cn type="e-notation">5<sep/>2</cn>"""
 @test isequal(MathML.parse_str(str), 500)
 
 str = """<cn type="complex-polar"> 2 <sep/> 3.1415 </cn>"""
-@test isapprox(MathML.parse_str(str), Complex(-2, 0), atol=1e-3)
+@test isapprox(MathML.parse_str(str), Complex(-2, 0), atol = 1e-3)
 
 str = """<cn type="complex-cartesian"> 12.3 <sep/> 5 </cn>"""
 @test isequal(MathML.parse_str(str), Complex(12.3, 5))
@@ -97,15 +97,14 @@ str = """
 </otherwise>
 </piecewise>
 """
-@test isequal(MathML.parse_str(str), 
-  IfElse.ifelse(
-    IfElse.ifelse(1. - t >= 0, 1, 0) > 0.5,
-     x * (y + a * z) * ((1.0 - (b * z))^-1),
-      x * y))
+@test isequal(MathML.parse_str(str),
+              IfElse.ifelse(IfElse.ifelse(1.0 - t >= 0, 1, 0) > 0.5,
+                            x * (y + a * z) * ((1.0 - (b * z))^-1),
+                            x * y))
 
 # factorial
 str = "<apply><factorial/><ci>x</ci></apply>"
-@test isequal(MathML.parse_str(str), SpecialFunctions.gamma(1+x))
+@test isequal(MathML.parse_str(str), SpecialFunctions.gamma(1 + x))
 
 str = "<apply><factorial/><cn>5</cn></apply>"
 @test MathML.parse_str(str) == 120
@@ -261,7 +260,7 @@ str = """
 f = parse_str(str)
 xml = parsexml(str).root
 g = parse_lambda(xml)
-@test g(3,5) == f(3,5) == [243]
+@test g(3, 5) == f(3, 5) == [243]
 @test isequal(f(x, y), [x^y])
 
 # parse_apply with <ci> as firstelement problem
