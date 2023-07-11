@@ -2,6 +2,10 @@
     to_MathML(e::Union{Expr, Symbolics.Num})
 
 take an expression and turn it into MathML
+
+!!! note
+
+    The current support is limited to simple algebraic expressions.
 """
 function to_MathML(e::Expr)
     link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
