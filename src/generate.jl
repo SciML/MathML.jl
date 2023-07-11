@@ -1,8 +1,13 @@
-function symbol_to_MathML(e::Expr)
+"""
+    to_MathML(e::Union{Expr, Symbolics.Num})
+
+take an expression and turn it into MathML
+"""
+function to_MathML(e::Expr)
     link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
 end
 
-symbol_to_MathML(e::Num) = Symbolcis.toexpr(e)
+to_MathML(e::Num) = to_MathML(Symbolcis.toexpr(e))
 
 const OP_TO_NODE = Dict(:+ => ElementNode("plus"),
                         :* => ElementNode("times"),
