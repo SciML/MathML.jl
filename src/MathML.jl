@@ -7,6 +7,7 @@ using DocStringExtensions
 using EzXML, Symbolics, Statistics, IfElse, AbstractTrees
 import SpecialFunctions
 
+include("generate.jl")
 include("utils.jl")
 include("parse.jl")
 include("maps.jl")
