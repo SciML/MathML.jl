@@ -1,6 +1,5 @@
 function symbol_to_MathML(e::Expr)
-    elm = ElementNode("math")
-    link!(elm, _MathMLize(e::Expr))
+    link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
 end
 
 symbol_to_MathML(e::Num) = Symbolcis.toexpr(e)
@@ -17,7 +16,7 @@ function _symbol_to_MathML(e::Expr)
     elm = ElementNode("apply")
     for arg in @views e.args[2:end]
         if arg isa Expr
-            node = _MathMLize(arg)
+            node = _symbol_to_MathML(arg)
         elseif arg isa Number
             node = ElementNode("cn")
             link!(node, TextNode(string(arg)))
