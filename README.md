@@ -72,16 +72,16 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
     - integration `int` tags - needs https://github.com/JuliaSymbolics/Symbolics.jl/issues/58
         - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq> (I think solution is `Symbolics.diff2term`)
     - `diff`s with no independent variable: like `<apply><diff/><ci>f</ci></apply>`
-* to_mathml: julia expr -> mathml. round tripping 
 
 ## DONE:
 * nested apply
-* fix sep/ tags in cn, take `type` attribute into account 
+* fix sep/ tags in cn, take `type` attribute into account
     - rational, e-notation, complex, complex polar
 * basic diff handling
 * bound variables like bvar, might be lingering issues though
 * `eq` nodes sometimes needs to be ~ and sometimes needs to be =
 * fix `sep` tags in `ci`s, take `type` attribute into account
 * `piecewise` tags: make heaviside test work
-* fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156 
+* fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156
     - parsers like SBML and CellMLToolkit should be handling
+* to_mathml: julia expr -> mathml and Symbolics Num -> mathml. round tripping
