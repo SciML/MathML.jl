@@ -96,8 +96,8 @@ function process_pieces(pieces, otherwise)
     node = pieces[1]
     c = parse_node.(elements(node))
     return IfElse.ifelse(c[2] > 0.5, c[1],
-                         length(pieces) == 1 ? otherwise :
-                         process_pieces(pieces[2:end], otherwise))
+        length(pieces) == 1 ? otherwise :
+        process_pieces(pieces[2:end], otherwise))
 end
 
 """

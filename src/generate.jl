@@ -14,11 +14,11 @@ end
 to_MathML(e::Num) = to_MathML(Symbolcis.toexpr(e))
 
 const OP_TO_NODE = Dict(:+ => ElementNode("plus"),
-                        :* => ElementNode("times"),
-                        :- => ElementNode("minus"),
-                        :^ => ElementNode("power"),
-                        :sin => ElementNode("sin"),
-                        :cos => ElementNode("cos"),)
+    :* => ElementNode("times"),
+    :- => ElementNode("minus"),
+    :^ => ElementNode("power"),
+    :sin => ElementNode("sin"),
+    :cos => ElementNode("cos"))
 
 function _symbol_to_MathML(e::Expr)
     @assert e.head in (:call, :invoke)
