@@ -97,8 +97,7 @@ applymap = Dict{String, Function}(
 
     "vector" => Base.identity,
     "diff" => parse_diff,
-    "cn" => parse_diff
-    # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
+    "cn" => parse_diff    # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
 )
 
 tagmap = Dict{String, Function}("cn" => parse_cn,
