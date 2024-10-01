@@ -1,7 +1,7 @@
 name = "MathML"
 uuid = "abcecc63-2b08-419c-80c4-c63dca6fa478"
 authors = ["anand <anandj@uchicago.edu> and contributors"]
-version = "0.1.15"
+version = "0.1.16"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
