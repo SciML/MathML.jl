@@ -14,7 +14,7 @@ eqs = MathML.parse_node(doc.root)
 @variables T I Par_94 Par_90
 true_eqs = [
     T ~ Par_94,
-    I ~ Par_90,
+    I ~ Par_90
 ]
 @test isequal(eqs, true_eqs)
 
