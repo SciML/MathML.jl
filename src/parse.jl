@@ -112,6 +112,9 @@ function parse_apply(node)
         error("calling parse_apply requires the name of the element to be `apply`")
     elms = elements(node)
     cs = parse_node.(elms[2:end])
+    if elms[1].name == "piecewise"
+        return parse_piecewise(elms[1])
+    end
     applymap[elms[1].name](cs)
 end
 
