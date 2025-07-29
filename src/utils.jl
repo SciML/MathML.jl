@@ -45,7 +45,7 @@ end
     @disambiguate_equality!
 
 utility function to replace <eq> inside piecewise subtrees to
-disambiguate from the assignement <eq>
+disambiguate from the assignment <eq>
 """
 function disambiguate_equality!(node)
     nodes = findall("//x:piecewise//x:eq", node, ["x" => mathml_ns])

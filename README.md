@@ -63,14 +63,14 @@ expand_derivatives(ml)
 # 12(x^2)
 ```
 
-Check the tests in `test/parse.jl` to see a more exaustive list of what is covered.
+Check the tests in `test/parse.jl` to see a more exhaustive list of what is covered.
 
 ## TODO:
 * calculus:
     - ivars fix, make ODESystem(parse_node(readxml("lorenz.xml").root)) work
     - partial derivatives `partialdiff` tags
     - integration `int` tags - needs https://github.com/JuliaSymbolics/Symbolics.jl/issues/58
-        - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is refered to after this \<eq> (I think solution is `Symbolics.diff2term`)
+        - often a var like dPidt is assigned to Differential(time)(Pi) where dPidt is referred to after this \<eq> (I think solution is `Symbolics.diff2term`)
     - `diff`s with no independent variable: like `<apply><diff/><ci>f</ci></apply>`
 
 ## DONE:
@@ -83,5 +83,5 @@ Check the tests in `test/parse.jl` to see a more exaustive list of what is cover
 * fix `sep` tags in `ci`s, take `type` attribute into account
 * `piecewise` tags: make heaviside test work
 * fix undefined namespacing issues https://github.com/JuliaIO/EzXML.jl/issues/156
-    - parsers like SBML and CellMLToolkit should be handling
+    - parsets like SBML and CellMLToolkit should be handling
 * to_mathml: julia expr -> mathml and Symbolics Num -> mathml. round tripping

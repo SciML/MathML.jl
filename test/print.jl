@@ -2,7 +2,7 @@ xml = readxml("data/math.xml").root
 
 io = IOBuffer()
 print_tree(io, xml)
-ser = String(take!(io))
+set = String(take!(io))
 str = """
 math
 └─ apply
@@ -11,4 +11,4 @@ math
    ├─ ci
    └─ ci
 """
-@test strip(ser) == strip(str)
+@test strip(set) == strip(str)
