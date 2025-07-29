@@ -6,7 +6,7 @@
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://SciML.github.io/MathML.jl/dev)
 [![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
-A parset for the [MathML](https://en.wikipedia.org/wiki/MathML) XML standard.
+A parser for the [MathML](https://en.wikipedia.org/wiki/MathML) XML standard.
 
 Uses Symbolics.jl under the hood for defining equations and uses EzXML.jl for XML parsing.
 
