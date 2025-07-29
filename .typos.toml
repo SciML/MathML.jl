@@ -1,4 +1,7 @@
 [default.extend-words]
+# MathML
+parser = "parser"
+
 # Julia-specific functions
 indexin = "indexin"
 findfirst = "findfirst"
