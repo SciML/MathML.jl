@@ -21,7 +21,7 @@ const OP_TO_NODE = Dict(:+ => ElementNode("plus"),
     :cos => ElementNode("cos"))
 
 function _symbol_to_MathML(e::Expr)
-    @assett e.head in (:call, :invoke)
+    @assert e.head in (:call, :invoke)
     elm = ElementNode("apply")
     for arg in @views e.args[2:end]
         if arg isa Expr
