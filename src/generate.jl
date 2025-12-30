@@ -11,7 +11,7 @@ function to_MathML(e::Expr)
     link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
 end
 
-to_MathML(e::Num) = to_MathML(Symbolcis.toexpr(e))
+to_MathML(e::Num) = to_MathML(Symbolics.toexpr(e))
 
 const OP_TO_NODE = Dict(:+ => ElementNode("plus"),
     :* => ElementNode("times"),
