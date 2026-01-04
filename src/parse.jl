@@ -4,22 +4,22 @@
 take a node and parse into Symbolics form
 """
 function parse_node(node)
-    tagmap[node.name](node)
+    return tagmap[node.name](node)
 end
 
 function parse_str(str)
     doc = parsexml(str)
-    parse_doc(doc)
+    return parse_doc(doc)
 end
 
 function parse_doc(doc)
     node = doc.root
-    parse_node(node)
+    return parse_node(node)
 end
 
 function parse_file(fn)
     node = readxml(fn).root
-    parse_node(node)
+    return parse_node(node)
 end
 
 """
@@ -30,10 +30,10 @@ parse a <cn> node
 function parse_cn(node)
     # elements(node) != EzXML.Node[] && error("node cant have elements rn, check if </sep> is in the node")
     # this isnt great might want to check that `sep` actually shows up
-    if haskey(node, "type") && elements(node) != EzXML.Node[]
+    return if haskey(node, "type") && elements(node) != EzXML.Node[]
         parse_cn_w_sep(node)
     else
-        # Float64(Meta.parse(node.content))  
+        # Float64(Meta.parse(node.content))
         parse(Float64, node.content) # convert to Float64 for CellML compatibility
     end
 end
@@ -52,7 +52,7 @@ function parse_cn_w_sep(node)
     length(txts) != 2 && error("stop, collaborate, and listen!, problem with <cn>")
     x1, x2 = map(x -> Meta.parse(x.content), txts)
     t = node["type"]
-    if t == "e-notation"
+    return if t == "e-notation"
         x1 * exp10(x2)
     elseif t == "rational"
         Rational(x1, x2)
@@ -71,9 +71,9 @@ end
 parse a <ci> node
 """
 function parse_ci(node)
-    # c = Symbol(Meta.parse(strip(node.content)))    
+    # c = Symbol(Meta.parse(strip(node.content)))
     c = Symbol(string(strip(node.content)))
-    (@variables $c)[1]
+    return (@variables $c)[1]
 end
 
 ########## Parse piecewise ###################################################
@@ -95,9 +95,11 @@ end
 function process_pieces(pieces, otherwise)
     node = pieces[1]
     c = parse_node.(elements(node))
-    return IfElse.ifelse(c[2] > 0.5, c[1],
+    return IfElse.ifelse(
+        c[2] > 0.5, c[1],
         length(pieces) == 1 ? otherwise :
-        process_pieces(pieces[2:end], otherwise))
+            process_pieces(pieces[2:end], otherwise)
+    )
 end
 
 """
@@ -115,7 +117,7 @@ function parse_apply(node)
     if elms[1].name == "piecewise"
         return parse_piecewise(elms[1])
     end
-    applymap[elms[1].name](cs)
+    return applymap[elms[1].name](cs)
 end
 
 """
@@ -125,7 +127,7 @@ parse a <bvar> node
 """
 function parse_bvar(node)
     es = elements(node)
-    length(es) == 1 ? (parse_node(es[1]), 1) : Tuple(parse_node.(es))
+    return length(es) == 1 ? (parse_node(es[1]), 1) : Tuple(parse_node.(es))
 end
 
 """
@@ -139,7 +141,7 @@ function parse_diff(a)
     deg = trunc(Int, deg)
     # num = Num(Symbolics.Sym{Symbolics.FnType{Tuple{Real},Real}}(Symbol(x))(iv))
     D = Differential(iv)^deg
-    D(x)
+    return D(x)
 end
 
 """
@@ -162,5 +164,5 @@ function parse_lambda(node)
 
     args = first.(parse_bvar.(vars))
     num = parse_apply(es[end])
-    eval(build_function([num], args...)[1])
+    return eval(build_function([num], args...)[1])
 end
