@@ -1,4 +1,3 @@
-
 # need to check the arities
 # units handling??
 applymap = Dict{String, Function}(
@@ -37,7 +36,7 @@ applymap = Dict{String, Function}(
     "and" => x -> Base.:*(x...),
     "or" => heaviside_or,
     "xor" => x -> x[1] * (one(x[2]) - x[2]) +
-                  (one(x[1]) - x[1]) * x[2],
+        (one(x[1]) - x[1]) * x[2],
     "not" => x -> one(x[1]) - x[1],
 
     # "and" => x -> Base.:&(x...),
@@ -100,7 +99,8 @@ applymap = Dict{String, Function}(
     "cn" => parse_diff    # "apply" => x -> parse_apply(x) # this wont work because we pass the name which is string
 )
 
-tagmap = Dict{String, Function}("cn" => parse_cn,
+tagmap = Dict{String, Function}(
+    "cn" => parse_cn,
     "ci" => parse_ci,
     "degree" => x -> parse_node(x.firstelement), # won't work for all cases
     "bvar" => parse_bvar, # won't work for all cases
@@ -115,4 +115,5 @@ tagmap = Dict{String, Function}("cn" => parse_cn,
     "notanumber" => x -> NaN,
     "infinity" => x -> Inf,
     "true" => x -> true,
-    "false" => x -> false)
+    "false" => x -> false
+)

@@ -8,17 +8,19 @@ take an expression and turn it into MathML
     The current support is limited to simple algebraic expressions.
 """
 function to_MathML(e::Expr)
-    link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
+    return link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
 end
 
 to_MathML(e::Num) = to_MathML(Symbolics.toexpr(e))
 
-const OP_TO_NODE = Dict(:+ => ElementNode("plus"),
+const OP_TO_NODE = Dict(
+    :+ => ElementNode("plus"),
     :* => ElementNode("times"),
     :- => ElementNode("minus"),
     :^ => ElementNode("power"),
     :sin => ElementNode("sin"),
-    :cos => ElementNode("cos"))
+    :cos => ElementNode("cos")
+)
 
 function _symbol_to_MathML(e::Expr)
     @assert e.head in (:call, :invoke)

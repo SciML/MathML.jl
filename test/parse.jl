@@ -1,6 +1,6 @@
 using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
 using Symbolics: variable
-# these tests mimic the README examples 
+# these tests mimic the README examples
 fn = "data/math.xml"
 doc = readxml(fn)
 num = MathML.parse_node(doc.root)
@@ -14,7 +14,7 @@ eqs = MathML.parse_node(doc.root)
 @variables T I Par_94 Par_90
 true_eqs = [
     T ~ Par_94,
-    I ~ Par_90
+    I ~ Par_90,
 ]
 @test isequal(eqs, true_eqs)
 
@@ -30,7 +30,7 @@ str = """<cn type="e-notation">5<sep/>2</cn>"""
 @test isequal(MathML.parse_str(str), 500)
 
 str = """<cn type="complex-polar"> 2 <sep/> 3.1415 </cn>"""
-@test isapprox(MathML.parse_str(str), Complex(-2, 0), atol = 1e-3)
+@test isapprox(MathML.parse_str(str), Complex(-2, 0), atol = 1.0e-3)
 
 str = """<cn type="complex-cartesian"> 12.3 <sep/> 5 </cn>"""
 @test isequal(MathML.parse_str(str), Complex(12.3, 5))
@@ -97,10 +97,14 @@ str = """
 </otherwise>
 </piecewise>
 """
-@test isequal(MathML.parse_str(str),
-    IfElse.ifelse(IfElse.ifelse(1.0 - t >= 0, 1, 0) > 0.5,
+@test isequal(
+    MathML.parse_str(str),
+    IfElse.ifelse(
+        IfElse.ifelse(1.0 - t >= 0, 1, 0) > 0.5,
         x * (y + a * z) * ((1.0 - (b * z))^-1),
-        x * y))
+        x * y
+    )
+)
 
 # factorial
 str = "<apply><factorial/><ci>x</ci></apply>"
@@ -121,7 +125,7 @@ str = """
 str = "<apply><root/><ci>x</ci></apply>"
 @test isequal(MathML.parse_str(str), sqrt(x))
 
-#  
+#
 str = """
 <apply><divide/>
 <ci>x</ci>
@@ -130,40 +134,40 @@ str = """
 """
 @test isequal(MathML.parse_str(str), x / y)
 
-#  
+#
 str = "<apply><max/><cn>2</cn><cn>3</cn><cn>5</cn></apply>"
 @test isequal(MathML.parse_str(str), 5)
 
-#  
+#
 str = "<apply><min/><ci>x</ci><ci>y</ci></apply>"
 @test isequal(MathML.parse_str(str), min(x, y))
 
-#  
+#
 str = "<apply><minus/><cn>3</cn></apply>"
 @test isequal(MathML.parse_str(str), -3)
 
-#  
+#
 str = "<apply><minus/><ci>x</ci><ci>y</ci></apply>"
 @test isequal(MathML.parse_str(str), x - y)
 
-#  
+#
 str = "<apply><plus/><ci>x</ci><ci>y</ci><ci>z</ci></apply>"
 @test isequal(MathML.parse_str(str), x + y + z)
 
-#  
+#
 str = "<apply><rem/><ci>x</ci><ci>y</ci></apply>"
 @test isequal(MathML.parse_str(str), rem(x, y))
 
-#  
+#
 # str = "<apply><gcd/><ci>a</ci><ci>b</ci><ci>c</ci></apply>" # gcd is a ways off, gröbner bases
 # MathML.parse_str(str)
 # @test isequal(MathML.parse_str(str), )
 
-#  
+#
 str = "<apply><abs/><ci>x</ci></apply>"
 @test isequal(MathML.parse_str(str), abs(x))
 
-#  
+#
 # str = """
 # <apply><conjugate/>
 #   <apply><plus/>
@@ -189,15 +193,15 @@ str = "<apply><abs/><ci>x</ci></apply>"
 str = "<apply><gt/><cn>3</cn><cn>2</cn></apply>"
 @test isequal(MathML.parse_str(str), true)
 
-#  
+#
 str = "<apply><lt/><cn>2</cn><cn>3</cn><cn>4</cn></apply>"
 @test isequal(MathML.parse_str(str), true)
 
-#  
+#
 str = "<apply><exp/><ci>x</ci></apply>"
 @test isequal(MathML.parse_str(str), exp(x))
 
-#  
+#
 str = "<apply><ln/><ci>x</ci></apply>"
 @test isequal(MathML.parse_str(str), log(x))
 

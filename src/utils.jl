@@ -12,12 +12,12 @@ function mathml_to_nums end
 
 function mathml_to_nums(fn::AbstractString)
     doc = readxml(fn)
-    mathml_to_nums(doc)
+    return mathml_to_nums(doc)
 end
 
 function mathml_to_nums(xml::EzXML.Document)
     doc_root = EzXML.root(xml)
-    mathml_to_nums(doc_root)
+    return mathml_to_nums(doc_root)
 end
 
 """
@@ -29,16 +29,16 @@ returns all of the MathML nodes.
 function extract_mathml end
 
 function extract_mathml(fn::AbstractString)
-    extract_mathml(readxml(fn))
+    return extract_mathml(readxml(fn))
 end
 
 function extract_mathml(doc::EzXML.Document)
-    extract_mathml(EzXML.root(doc))
+    return extract_mathml(EzXML.root(doc))
 end
 
 function extract_mathml(node::EzXML.Node)
     disambiguate_equality!(node)
-    findall("//x:math", node, ["x" => mathml_ns])
+    return findall("//x:math", node, ["x" => mathml_ns])
 end
 
 """
@@ -52,6 +52,7 @@ function disambiguate_equality!(node)
     for n in nodes
         setnodename!(n, "equal")
     end
+    return
 end
 
 """
@@ -60,7 +61,7 @@ end
 utility macro for parsing xml strings into node
 """
 macro xml_str(s)
-    parsexml(s).root
+    return parsexml(s).root
 end
 
 """
@@ -69,7 +70,7 @@ end
 utility macro for parsing xml strings into symbolics
 """
 macro MathML_str(s)
-    MathML.parse_str(s)
+    return MathML.parse_str(s)
 end
 
 # bindings for viewing call tree
@@ -78,13 +79,13 @@ AbstractTrees.printnode(io::IO, node::EzXML.Node) = print(io, getproperty(node, 
 AbstractTrees.nodetype(::EzXML.Node) = EzXML.Node
 
 function custom_root(x)
-    length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+    return length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
 end
 
 "ensure theres only one independent variable, returns false if more than one iv"
 function check_ivs(node)
     x = findall("//x:bvar", node, ["x" => MathML.mathml_ns])
-    all(y -> y.content == x[1].content, x)
+    return all(y -> y.content == x[1].content, x)
 end
 
 # conditional and rounding hacks
@@ -92,5 +93,5 @@ H(x) = IfElse.ifelse(x >= 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
 function heaviside_or(x)
-    length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
+    return length(x) == 1 ? x[1] : x[1] + heaviside_or(x[2:end]) - x[1] * heaviside_or(x[2:end])
 end
