@@ -1,3 +1,8 @@
+# External CellML/MathML model fixtures contain verbatim variable names (e.g. denomMgpHODE)
+# that are not English prose and must not be "corrected".
+[files]
+extend-exclude = ["test/data/"]
+
 [default.extend-words]
 # MathML
 parser = "parser"
