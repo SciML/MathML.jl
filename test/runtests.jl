@@ -1,4 +1,5 @@
 using Pkg
+using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
 
 const GROUP = get(ENV, "GROUP", "All")
 
@@ -8,8 +9,6 @@ if GROUP == "QA"
     Pkg.instantiate()
     include("qa/qa.jl")
 else
-    using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
-
     @testset "MathML.jl" begin
         @testset "parsing" begin
             include("parse.jl")
