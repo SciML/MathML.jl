@@ -20,6 +20,7 @@ EzXML = "1.1"
 IfElse = "0.1.1"
 ModelingToolkit = "11"
 PrecompileTools = "1.2.1"
+SafeTestsets = "0.1, 1"
 SpecialFunctions = "2"
 Statistics = "1"
 Symbolics = "7.2"
@@ -28,7 +29,8 @@ julia = "1.10"
 [extras]
 ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "ModelingToolkit", "Pkg"]
+test = ["Test", "ModelingToolkit", "Pkg", "SafeTestsets"]

@@ -1,4 +1,5 @@
 using Pkg
+using SafeTestsets
 using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
 
 const GROUP = get(ENV, "GROUP", "All")
@@ -10,18 +11,18 @@ if GROUP == "QA"
     include("qa/qa.jl")
 else
     @testset "MathML.jl" begin
-        @testset "parsing" begin
+        @safetestset "parsing" begin
             include("parse.jl")
         end
-        @testset "utils" begin
+        @safetestset "utils" begin
             include("utils.jl")
         end
-        @testset "print" begin
+        @safetestset "print" begin
             include("print.jl")
         end
-        @testset "generate" begin
+        @safetestset "generate" begin
             include("generate.jl")
         end
-        # @testset "systems" begin include("sys.jl") end
+        # @safetestset "systems" begin include("sys.jl") end
     end
 end

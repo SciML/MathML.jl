@@ -1,3 +1,5 @@
+using MathML, EzXML, AbstractTrees, Test
+
 xml = readxml("data/math.xml").root
 
 io = IOBuffer()

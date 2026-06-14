@@ -1,6 +1,7 @@
-using MathML, Aqua, JET, Test
+using SafeTestsets
 
-@testset "Aqua" begin
+@safetestset "Aqua" begin
+    using MathML, Aqua, Test
     # deps_compat (extras: Pkg has no [compat] entry) and piracies (children/nodetype/printnode
     # on EzXML.Node) are genuine findings tracked in
     # https://github.com/SciML/MathML.jl/issues/104 — run the rest of Aqua, mark these broken.
@@ -9,7 +10,8 @@ using MathML, Aqua, JET, Test
     @test_broken false  # Aqua piracies: children/nodetype/printnode on EzXML.Node (src/utils.jl) — tracked in https://github.com/SciML/MathML.jl/issues/104
 end
 
-@testset "JET" begin
+@safetestset "JET" begin
+    using MathML, JET, Test
     # JET reports a genuine error: no matching method `mathml_to_nums(::EzXML.Node)` is
     # ever defined, yet mathml_to_nums(::EzXML.Document) calls it (src/utils.jl:20).
     # Tracked in https://github.com/SciML/MathML.jl/issues/104 — run in report mode and
