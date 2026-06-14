@@ -1,3 +1,5 @@
+using MathML, EzXML, Test
+
 fn = "data/vinnakota_kemp_kushmeric_2006_exp45.cellml"
 doc = readxml(fn)
 docroot = doc.root
