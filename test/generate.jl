@@ -1,3 +1,5 @@
+using MathML, Test
+
 ex = :(1 + 2 + x + y * z * num^4)
 io = IOBuffer()
 print(io, to_MathML(ex))
