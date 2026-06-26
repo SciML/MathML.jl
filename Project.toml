@@ -1,6 +1,6 @@
 name = "MathML"
 uuid = "abcecc63-2b08-419c-80c4-c63dca6fa478"
-version = "0.1.19"
+version = "0.1.20"
 authors = ["anand <anandj@uchicago.edu> and contributors"]
 
 [deps]
