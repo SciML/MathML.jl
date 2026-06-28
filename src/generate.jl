@@ -38,6 +38,8 @@ function _symbol_to_MathML(e::Expr)
                 node = ElementNode("ci")
                 link!(node, TextNode(string(arg)))
             end
+        else
+            throw(ArgumentError("unsupported expression argument $(arg) of type $(typeof(arg))"))
         end
         link!(elm, node)
     end
