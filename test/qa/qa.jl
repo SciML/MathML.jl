@@ -15,7 +15,6 @@ using JET
 #     Document   — EzXML (not declared public)
 #     Node       — EzXML (not declared public)
 #     ifelse     — IfElse (not declared public)
-#     parse      — Base.Meta (not declared public)
 #     printnode  — AbstractTrees (not declared public)
 #     toexpr     — Symbolics (not declared public; SymbolicUtils-owned)
 run_qa(
@@ -25,7 +24,7 @@ run_qa(
     ei_kwargs = (;
         all_qualified_accesses_via_owners = (; ignore = (:toexpr,)),
         all_qualified_accesses_are_public = (;
-            ignore = (:Document, :Node, :ifelse, :parse, :printnode, :toexpr),
+            ignore = (:Document, :Node, :ifelse, :printnode, :toexpr),
         ),
     ),
 )
