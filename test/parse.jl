@@ -270,3 +270,14 @@ g = parse_lambda(xml)
 
 # parse_apply with <ci> as firstelement problem
 @test_throws KeyError parse_file("data/err.xml")
+
+# mathml_to_nums dispatches AbstractString -> Document -> Node, all yielding the
+# same Vector{Num} of the <ci> symbols (math.xml has compartment, k1, S1).
+@variables compartment k1 S1
+fn = "data/math.xml"
+doc = readxml(fn)
+nums_from_node = mathml_to_nums(doc.root)
+@test eltype(nums_from_node) == Num
+@test Set(nums_from_node) == Set([compartment, k1, S1])
+@test isequal(mathml_to_nums(doc), nums_from_node)
+@test isequal(mathml_to_nums(fn), nums_from_node)

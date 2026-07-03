@@ -1,4 +1,4 @@
-using PrecompileTools
+using PrecompileTools: @compile_workload, @setup_workload
 
 @setup_workload begin
     # Simple MathML strings for precompilation

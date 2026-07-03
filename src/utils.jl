@@ -20,6 +20,11 @@ function mathml_to_nums(xml::EzXML.Document)
     return mathml_to_nums(doc_root)
 end
 
+function mathml_to_nums(node::EzXML.Node)
+    cis = findall("//x:ci", node, ["x" => mathml_ns])
+    return unique(parse_ci.(cis))
+end
+
 """
     extract_mathml()
 
