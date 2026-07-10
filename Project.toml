@@ -13,6 +13,9 @@ SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 
+[sources]
+SciMLTesting = {url = "https://github.com/SciML/SciMLTesting.jl", rev = "a5cecca928f2c684c23505c3cd83921d71753e2e"}
+
 [compat]
 AbstractTrees = "0.4"
 DocStringExtensions = "0.9.3"
@@ -21,7 +24,7 @@ IfElse = "0.1.1"
 ModelingToolkit = "11"
 PrecompileTools = "1.2.1"
 SafeTestsets = "0.1, 1"
-SciMLTesting = "1"
+SciMLTesting = "2.1"
 SpecialFunctions = "2"
 Statistics = "1"
 Symbolics = "7.2"
