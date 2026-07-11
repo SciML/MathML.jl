@@ -7,6 +7,19 @@ function parse_node(node)
     return tagmap[node.name](node)
 end
 
+"""
+    parse_str(str::AbstractString)
+
+Parse a MathML XML string into a Symbolics expression.
+
+# Examples
+
+```julia
+using MathML
+
+parse_str("<apply><plus/><ci>x</ci><cn>1</cn></apply>")
+```
+"""
 function parse_str(str)
     doc = parsexml(str)
     return parse_doc(doc)
@@ -17,6 +30,21 @@ function parse_doc(doc)
     return parse_node(node)
 end
 
+"""
+    parse_file(filename::AbstractString)
+
+Read a MathML XML file and parse the document root into a Symbolics expression.
+
+# Examples
+
+```julia
+using MathML
+
+filename = tempname()
+write(filename, "<apply><times/><ci>x</ci><cn>2</cn></apply>")
+parse_file(filename)
+```
+"""
 function parse_file(fn)
     node = readxml(fn).root
     return parse_node(node)
@@ -78,6 +106,25 @@ end
 
 ########## Parse piecewise ###################################################
 
+"""
+    parse_piecewise(node)
+
+Parse a MathML `<piecewise>` node into a nested symbolic conditional expression.
+
+# Examples
+
+```julia
+using MathML
+
+node = xml\"\"\"
+<piecewise>
+  <piece><cn>1</cn><apply><gt/><ci>x</ci><cn>0</cn></apply></piece>
+  <otherwise><cn>0</cn></otherwise>
+</piecewise>
+\"\"\"
+parse_piecewise(node)
+```
+"""
 function parse_piecewise(node)
     ns = elements(node)
     pieces = filter(x -> nodename(x) == "piece", ns)
