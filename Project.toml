@@ -13,18 +13,16 @@ SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 
-[sources]
-SciMLTesting = {url = "https://github.com/SciML/SciMLTesting.jl", rev = "a5cecca928f2c684c23505c3cd83921d71753e2e"}
-
 [compat]
 AbstractTrees = "0.4"
 DocStringExtensions = "0.9.3"
 EzXML = "1.1"
 IfElse = "0.1.1"
 ModelingToolkit = "11"
+Pkg = "1"
 PrecompileTools = "1.2.1"
 SafeTestsets = "0.1, 1"
-SciMLTesting = "2.1"
+SciMLTesting = "1"
 SpecialFunctions = "2"
 Statistics = "1"
 Symbolics = "7.2"
@@ -32,9 +30,10 @@ Test = "1"
 julia = "1.10"
 [extras]
 ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
 SciMLTesting = "09d9d899-5365-40a9-917a-5f67fddea283"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "ModelingToolkit", "SafeTestsets", "SciMLTesting"]
+test = ["Test", "ModelingToolkit", "Pkg", "SafeTestsets", "SciMLTesting"]
