@@ -20,7 +20,6 @@ run_qa(
     MathML;
     explicit_imports = true,
     aqua_broken = (:piracies,),
-    api_docs_kwargs = (; rendered = true),
     ei_kwargs = (;
         all_qualified_accesses_via_owners = (; ignore = (:toexpr,)),
         all_qualified_accesses_are_public = (;
