@@ -18,7 +18,6 @@ using SciMLTesting, MathML
 #     toexpr     — Symbolics (not declared public; SymbolicUtils-owned)
 run_qa(
     MathML;
-    explicit_imports = true,
     aqua_broken = (:piracies,),
     ei_kwargs = (;
         all_qualified_accesses_via_owners = (; ignore = (:toexpr,)),
