@@ -14,7 +14,7 @@ MathML Specification: https://www.w3.org/TR/MathML3/
 
 ## Examples:
 ```julia
-using MathML, EzXML, Symbolics, AbstractTrees
+using MathML, EzXML, Symbolics
 xml = xml"""<math xmlns="http://www.w3.org/1998/Math/MathML">
    <apply>
       <times />
@@ -28,16 +28,7 @@ num = parse_node(xml)
 # 1-element Vector{Num}:
 #  S1*compartment*k1
 
-# to pretty print the tree use `print_tree`
-print_tree(xml)
-# math
-# └─ apply
-#    ├─ times
-#    ├─ ci
-#    ├─ ci
-#    └─ ci
-
-# you can also just go directly from EzXML.Document or String
+# you can also parse directly from an XML document or string
 str = "<apply><power/><ci>x</ci><cn>3</cn></apply>"
 MathML.parse_str(str)
 # x^3

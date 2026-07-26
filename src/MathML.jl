@@ -8,8 +8,6 @@ using EzXML: EzXML, ElementNode, TextNode, eachnode, elements, firstelement,
     istext, link!, nodename, parsexml, readxml, setnodename!
 using Symbolics: Symbolics, @variables, Differential, Num, build_function
 using Statistics: Statistics
-using IfElse: IfElse
-using AbstractTrees: AbstractTrees
 import SpecialFunctions
 
 include("generate.jl")

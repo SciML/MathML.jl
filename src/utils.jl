@@ -1,49 +1,66 @@
 const mathml_ns = "http://www.w3.org/1998/Math/MathML"
 
 """
-    mathml_to_nums()
+    mathml_to_nums(input)
 
-given a filename or an `EzXML.Document` or `EzXML.Node`,
-finds all of the <ci>s and defines them as Symbolics.jl Nums
-returns a Vector{Num}.
-Note, the root namespace needs to be MathML
+Return the unique symbolic identifiers declared by MathML `<ci>` elements.
+
+# Arguments
+
+- `input`: A filename as an `AbstractString`, an XML document with a `root` property,
+  or an XML element rooted in the MathML namespace.
+
+# Returns
+
+A `Vector{Symbolics.Num}` in first-occurrence order. Repeated `<ci>` values occur once.
+
+# Examples
+
+```jldoctest
+julia> mathml_to_nums(parsexml("<math xmlns='http://www.w3.org/1998/Math/MathML'><ci>x</ci><ci>x</ci><ci>y</ci></math>"))
+2-element Vector{Symbolics.Num}:
+ x
+ y
+```
 """
-function mathml_to_nums end
-
-function mathml_to_nums(fn::AbstractString)
-    doc = readxml(fn)
-    return mathml_to_nums(doc)
-end
-
-function mathml_to_nums(xml::EzXML.Document)
-    doc_root = EzXML.root(xml)
-    return mathml_to_nums(doc_root)
-end
-
-function mathml_to_nums(node::EzXML.Node)
+function mathml_to_nums(input)
+    node = _mathml_root(input)
     cis = findall("//x:ci", node, ["x" => mathml_ns])
     return unique(parse_ci.(cis))
 end
 
 """
-    extract_mathml()
+    extract_mathml(input)
 
-given a filename, `EzXML.Document`, or `EzXML.Node`
-returns all of the MathML nodes.
+Extract all MathML `<math>` elements from an XML document or element.
+
+# Arguments
+
+- `input`: A filename as an `AbstractString`, an XML document with a `root` property,
+  or an XML element in a document that uses the MathML namespace.
+
+# Returns
+
+A vector of XML elements. Before extraction, `<eq>` nodes below `<piecewise>` are
+renamed to `<equal>` so later parsing distinguishes equality predicates from
+assignments.
+
+# Examples
+
+```jldoctest
+julia> length(extract_mathml(parsexml("<root xmlns='http://www.w3.org/1998/Math/MathML'><math><cn>1</cn></math></root>")))
+1
+```
 """
-function extract_mathml end
-
-function extract_mathml(fn::AbstractString)
-    return extract_mathml(readxml(fn))
-end
-
-function extract_mathml(doc::EzXML.Document)
-    return extract_mathml(EzXML.root(doc))
-end
-
-function extract_mathml(node::EzXML.Node)
+function extract_mathml(input)
+    node = _mathml_root(input)
     disambiguate_equality!(node)
     return findall("//x:math", node, ["x" => mathml_ns])
+end
+
+function _mathml_root(input)
+    input isa AbstractString && return getproperty(readxml(input), :root)
+    return hasproperty(input, :root) ? getproperty(input, :root) : input
 end
 
 """
@@ -61,27 +78,44 @@ function disambiguate_equality!(node)
 end
 
 """
-    @xml_str(s)
+    xml\"...\"
 
-utility macro for parsing xml strings into node
+Parse an XML string literal into its root element at runtime.
+
+# Arguments
+
+- String literal: Well-formed XML whose root is returned as an `EzXML` element.
+
+# Examples
+
+```jldoctest
+julia> xml\"<cn>2</cn>\".name
+\"cn\"
+```
 """
 macro xml_str(s)
     return parsexml(s).root
 end
 
 """
-    @MathML_str(s)
+    MathML\"...\"
 
-utility macro for parsing xml strings into symbolics
+Parse a MathML string literal into its Symbolics representation.
+
+# Arguments
+
+- String literal: MathML XML supported by [`parse_str`](@ref).
+
+# Examples
+
+```jldoctest
+julia> MathML\"<apply><plus/><cn>2</cn><cn>3</cn></apply>\"
+5.0
+```
 """
 macro MathML_str(s)
     return MathML.parse_str(s)
 end
-
-# bindings for viewing call tree
-AbstractTrees.children(n::EzXML.Node) = elements(n)
-AbstractTrees.printnode(io::IO, node::EzXML.Node) = print(io, getproperty(node, :name))
-AbstractTrees.nodetype(::EzXML.Node) = EzXML.Node
 
 function custom_root(x)
     return length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
@@ -94,7 +128,7 @@ function check_ivs(node)
 end
 
 # conditional and rounding hacks
-H(x) = IfElse.ifelse(x >= 0, one(x), zero(x))
+H(x) = ifelse(x >= 0, one(x), zero(x))
 const ϵ = eps(Float64)
 frac(x) = 0.5 - atan(cot(π * x)) / π
 function heaviside_or(x)

@@ -1,4 +1,4 @@
-using MathML, EzXML, Symbolics, SpecialFunctions, IfElse, AbstractTrees, Test
+using MathML, EzXML, Symbolics, SpecialFunctions, Test
 using Symbolics: variable
 # these tests mimic the README examples
 fn = "data/math.xml"
@@ -99,8 +99,8 @@ str = """
 """
 @test isequal(
     MathML.parse_str(str),
-    IfElse.ifelse(
-        IfElse.ifelse(1.0 - t >= 0, 1, 0) > 0.5,
+    ifelse(
+        ifelse(1.0 - t >= 0, 1, 0) > 0.5,
         x * (y + a * z) * ((1.0 - (b * z))^-1),
         x * y
     )

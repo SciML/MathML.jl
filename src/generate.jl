@@ -1,17 +1,38 @@
 """
-    to_MathML(e::Union{Expr, Symbolics.Num})
+    to_MathML(expression)
 
-take an expression and turn it into MathML
+Convert a Julia algebraic expression to an `EzXML` MathML element.
+
+# Arguments
+
+- `expression`: An `Expr` or `Symbolics.Num` containing calls, numbers, and symbols.
+  Supported operators are `+`, `-`, `*`, `^`, `sin`, and `cos`.
+
+# Returns
+
+An `EzXML` element representing the expression. Nested calls are represented with
+MathML `<apply>` elements, numbers with `<cn>`, and variables with `<ci>`.
+
+# Errors
+
+Throws an `ArgumentError` when an expression contains an unsupported argument type.
+
+# Examples
+
+```jldoctest
+julia> print(to_MathML(:(x + 2)))
+<apply><ci>x</ci><cn>2</cn></apply>
+```
 
 !!! note
 
-    The current support is limited to simple algebraic expressions.
+    This converter supports a deliberately small algebraic subset of Julia syntax.
 """
 function to_MathML(e::Expr)
     return link!(ElementNode("math"), _symbol_to_MathML(e::Expr))
 end
 
-to_MathML(e::Num) = to_MathML(Symbolics.toexpr(e))
+to_MathML(e::Num) = to_MathML(Meta.parse(string(e)))
 
 const OP_TO_NODE = Dict(
     :+ => ElementNode("plus"),

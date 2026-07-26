@@ -1,16 +1,4 @@
-using MathML, EzXML, AbstractTrees, Test
+using MathML, EzXML, Test
 
 xml = readxml("data/math.xml").root
-
-io = IOBuffer()
-print_tree(io, xml)
-set = String(take!(io))
-str = """
-math
-└─ apply
-   ├─ times
-   ├─ ci
-   ├─ ci
-   └─ ci
-"""
-@test strip(set) == strip(str)
+@test isequal(MathML.parse_node(xml), MathML.parse_file("data/math.xml"))
