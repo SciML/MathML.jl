@@ -14,7 +14,6 @@ Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 [compat]
 DocStringExtensions = "0.9.3"
 EzXML = "1.2"
-ModelingToolkit = "11.21"
 PrecompileTools = "1.2.1"
 SafeTestsets = "0.1"
 SciMLTesting = "2.4"
@@ -24,10 +23,9 @@ Symbolics = "7.39.2"
 Test = "1"
 julia = "1.10"
 [extras]
-ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
 SciMLTesting = "09d9d899-5365-40a9-917a-5f67fddea283"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "ModelingToolkit", "SafeTestsets", "SciMLTesting"]
+test = ["Test", "SafeTestsets", "SciMLTesting"]
