@@ -113,14 +113,17 @@ str = "<apply><factorial/><ci>x</ci></apply>"
 str = "<apply><factorial/><cn>5</cn></apply>"
 @test MathML.parse_str(str) == 120
 
-# root
+# root: the <degree> is the index of the root, not an exponent
 str = """
 <apply><root/>
   <degree><ci type="integer">y</ci></degree>
   <ci>x</ci>
 </apply>
 """
-@test isequal(MathML.parse_str(str), x^y)
+@test isequal(MathML.parse_str(str), x^(1 / y))
+
+str = "<apply><root/><degree><cn>3</cn></degree><ci>x</ci></apply>"
+@test Symbolics.value(substitute(MathML.parse_str(str), Dict(x => 8.0))) ≈ 2.0
 
 str = "<apply><root/><ci>x</ci></apply>"
 @test isequal(MathML.parse_str(str), sqrt(x))
