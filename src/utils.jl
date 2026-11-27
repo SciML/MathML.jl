@@ -117,8 +117,10 @@ macro MathML_str(s)
     return MathML.parse_str(s)
 end
 
+# `<root/>` takes an optional `<degree>`, the index of the root: `x[1]` is the
+# degree and `x[2]` the radicand, so the n-th root is `x[2]^(1 / x[1])`.
 function custom_root(x)
-    return length(x) == 1 ? sqrt(x...) : Base.:^(x[2], x[1])
+    return length(x) == 1 ? sqrt(x...) : Base.:^(x[2], 1 / x[1])
 end
 
 "ensure theres only one independent variable, returns false if more than one iv"
